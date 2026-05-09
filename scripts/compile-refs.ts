@@ -9,6 +9,7 @@
  * Mapping:
  *   refs-instagram.md  ← social-base/* + instagram-playbook/*
  *   refs-tiktok.md     ← social-base/* + tiktok-playbook/*
+ *   refs-threads.md    ← social-base/* + threads-playbook/*
  *
  * social-base/ holds rules common to both platforms (hook formulas,
  * anti-AI-slop, English authoring, photo-mode storytelling). Per-platform
@@ -47,6 +48,11 @@ const BUNDLES: BundleSpec[] = [
     outputFile: 'refs-tiktok.md',
     purpose: 'TikTok caption + hashtag + photo-mode + music rules',
     sourceDirs: ['social-base', 'tiktok-playbook'],
+  },
+  {
+    outputFile: 'refs-threads.md',
+    purpose: 'Threads caption + preview-cut hook + bilingual ID+EN rules',
+    sourceDirs: ['social-base', 'threads-playbook'],
   },
 ];
 
