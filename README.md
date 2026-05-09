@@ -1,15 +1,16 @@
 # social-short-form-writer
 
-Claude Code plugin for converting blog posts into native **Instagram** and **TikTok** captions, optimized for 2026 platform algorithms.
+Claude Code plugin for converting blog posts into native **Instagram**, **TikTok**, and **Threads** captions, optimized for 2026 platform algorithms.
 
 Pure content generation — emits one JSON envelope to stdout per skill run. The consuming backend (e.g. [Portfolio_v2](https://github.com/alisadikinma/Portfolio_v2)) parses stdout, validates, and handles all operational concerns: OAuth/Publer transport, scheduling, FSM, approval gate, cancel window.
 
 ## Skills
 
-| Skill | Purpose | Output schema |
-|---|---|---|
-| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5) | `InstagramOutputEnvelopeSchema` |
-| `/tiktok-gen` | Caption + 5-8 hashtags for TikTok photo-mode (9:16) | `TiktokOutputEnvelopeSchema` |
+| Skill | Purpose | Output schema | Tone |
+|---|---|---|---|
+| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5) | `InstagramOutputEnvelopeSchema` | English, narrative storytelling |
+| `/tiktok-gen` | Caption + 5-8 hashtags for TikTok photo-mode (9:16) | `TiktokOutputEnvelopeSchema` | English, search-index-aware first 150 chars |
+| `/threads-gen` | Caption + 0-3 hashtags for Threads text/carousel | `ThreadsOutputEnvelopeSchema` | Pro-but-conversational, ID+EN bilingual |
 
 ## Why a separate plugin?
 
@@ -18,14 +19,16 @@ This plugin is the third in a 3-tier publisher stack:
 ```
 ai-image-carousel-prompt-gen   ← Universal slide image engine (4:5, reused everywhere)
 linkedin-post-writer            ← LinkedIn long-form text + carousel-format routing
-social-short-form-writer        ← THIS: IG + TikTok caption authoring
+social-short-form-writer        ← THIS: IG + TikTok + Threads caption authoring
 ```
 
-Facebook Page authoring is **NOT** in this plugin. The consuming backend handles FB:
+Facebook Page authoring is **NOT** in this plugin (intentional Tier-2 cost-save). The consuming backend handles FB:
 - **FB text format** → reuses `linkedin_posts.content` directly (LinkedIn already authored EN long-form)
 - **FB carousel format** → reuses `/instagram-gen` output (FB + IG carousel both 4:5 photo)
 
-This decision is documented in [Portfolio_v2 design doc 2026-05-08](https://github.com/alisadikinma/Portfolio_v2/blob/main/docs/plans/2026-05-08-cross-post-publer-integration.md). Saves ~1 day of plugin dev with acceptable FB performance trade-off.
+This decision is documented in [Portfolio_v2 design doc 2026-05-08](https://github.com/alisadikinma/Portfolio_v2/blob/main/docs/plans/2026-05-08-cross-post-publer-integration.md). Saves ~1 day of plugin dev with acceptable FB performance trade-off (FB is a declining channel for Gen Z anyway).
+
+Threads, by contrast, **IS** in this plugin (Tier-1) because Threads is the primary Gen Z capture vehicle (44% Indonesian Gen Z penetration vs 22% on FB) and reuse-from-LinkedIn produces wrong tone — Threads needs preview-cut hooks (≤140 char), Pro-but-conversational voice, and 1-3 hashtag minimal culture, none of which transform cleanly from LinkedIn's 1100-char professional long-form.
 
 ## Hard rules (encoded in Zod schemas)
 
@@ -44,6 +47,15 @@ This decision is documented in [Portfolio_v2 design doc 2026-05-08](https://gith
 - **Link in caption is OK** (TikTok allows it; many creators do this)
 - English authoring
 - No `music_suggestion` field — Publer auto-attaches trending music
+
+### `/threads-gen`
+- Hashtags: **0-3 items HARDCAP** (Threads minimal hashtag culture; 4+ flagged as spam)
+- Caption: ≤500 chars (platform hard limit), **280-450 sweet spot**
+- Title (preview-cut hook): ≤140 chars (Threads "more" cutoff on feed)
+- **NO link in caption** — Threads de-prioritizes body URLs; link goes in first reply or bio
+- **Pro-but-conversational tone** — capital case, witty + sharp, NEVER lowercase Gen-Z slang
+- **Bilingual ID+EN by default** — hook in EN (preview reach), body mixed (cultural shorthand), engagement question in ID (local algorithm boost). Schema field `language: 'id'|'en'|'mixed'`, default `mixed`.
+- 6 hook formulas: contrarian truth / number reveal / hidden cost / personal stake / bilingual code-switch / industry call-out
 
 ## Usage
 
@@ -75,7 +87,7 @@ npm test
 
 # Compile reference bundles (NOT committed — for VPS deploy)
 npm run compile-refs
-# Outputs: references/compiled/refs-instagram.md + refs-tiktok.md
+# Outputs: references/compiled/refs-instagram.md + refs-tiktok.md + refs-threads.md
 ```
 
 ## VPS Deployment
@@ -92,6 +104,7 @@ npm run compile-refs
 # Symlink to home dir for easy --append-system-prompt-file path
 ln -sf "$(pwd)/references/compiled/refs-instagram.md" /home/claudesn/refs-instagram.md
 ln -sf "$(pwd)/references/compiled/refs-tiktok.md" /home/claudesn/refs-tiktok.md
+ln -sf "$(pwd)/references/compiled/refs-threads.md" /home/claudesn/refs-threads.md
 ```
 
 The compiled bundles are gitignored (`references/compiled/`) — they're rebuilt fresh from `docs/rag/*` on each deploy so the source RAG content stays the single source of truth.
@@ -102,9 +115,10 @@ The consuming backend ([Portfolio_v2](https://github.com/alisadikinma/Portfolio_
 
 - `App\Services\InstagramGenerationService` — SSH-invokes `/instagram-gen`
 - `App\Services\TiktokGenerationService` — SSH-invokes `/tiktok-gen`
+- `App\Services\ThreadsGenerationService` — SSH-invokes `/threads-gen`
 - `App\Services\FacebookGenerationService` — does NOT call this plugin; reuses LinkedIn or IG output
-- `App\Jobs\GenerateInstagramPost` / `GenerateTiktokPost` — queued wrappers
-- Env vars: `SOCIAL_GEN_REFS_INSTAGRAM`, `SOCIAL_GEN_REFS_TIKTOK`, `SOCIAL_GEN_MODEL=sonnet`, `SOCIAL_GEN_TIMEOUT_SECONDS=300`
+- `App\Jobs\GenerateInstagramPost` / `GenerateTiktokPost` / `GenerateThreadsPost` — queued wrappers
+- Env vars: `SOCIAL_GEN_REFS_INSTAGRAM`, `SOCIAL_GEN_REFS_TIKTOK`, `SOCIAL_GEN_REFS_THREADS`, `SOCIAL_GEN_MODEL=sonnet`, `SOCIAL_GEN_TIMEOUT_SECONDS=300`
 
 See [Portfolio_v2 root CLAUDE.md](https://github.com/alisadikinma/Portfolio_v2/blob/main/CLAUDE.md) section "Cross-Post Pipeline" for the full architecture.
 

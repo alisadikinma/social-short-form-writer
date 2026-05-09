@@ -1,7 +1,7 @@
 {
   "name": "social-short-form-writer",
-  "version": "0.1.0",
-  "description": "Claude Code plugin that converts blog posts into native Instagram + TikTok captions. Photo-mode focused (4:5 carousel for IG, 9:16 vertical for TikTok). Authors English captions, hashtag-rule-aware (IG hardcap 5 since Dec 2025, TikTok 5-8), hook-first formulas, anti-AI-slop. Pure content generation — emits draft JSON for an admin panel to consume.",
+  "version": "0.2.0",
+  "description": "Claude Code plugin that converts blog posts into native Instagram + TikTok + Threads captions. Photo-mode focused (4:5 carousel for IG, 9:16 vertical for TikTok, text/4:5 carousel for Threads). Authors English captions for IG/TikTok and ID+EN bilingual for Threads, hashtag-rule-aware (IG 3-5, TikTok 5-8, Threads 0-3), hook-first formulas, anti-AI-slop. Pure content generation — emits draft JSON for an admin panel to consume.",
   "type": "module",
   "private": true,
   "license": "MIT",
