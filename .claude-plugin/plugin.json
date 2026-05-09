@@ -1,0 +1,25 @@
+{
+  "name": "social-short-form-writer",
+  "description": "Convert blog posts to native Instagram + TikTok captions optimized for 2026 algorithms. 2 skills: /instagram-gen (4:5 photo carousel, 5-hashtag hardcap since Dec 2025, hook-first ≤125 chars, English authoring, NO link-in-caption) and /tiktok-gen (9:16 photo-mode + video, first 150 chars critical for search index, 5-8 hashtags, link-in-caption OK). Pure content generation — emits draft JSON for an admin panel to consume. Pairs with linkedin-post-writer (long-form text + carousel routing) and ai-image-carousel-prompt-gen (universal slide image engine). Facebook Page caption authoring is handled by the consuming backend, not by this plugin (FB text reuses LinkedIn content; FB carousel reuses /instagram-gen output).",
+  "version": "0.1.0",
+  "author": {
+    "name": "Ali Sadikin",
+    "url": "https://github.com/alisadikinma"
+  },
+  "homepage": "https://github.com/alisadikinma/social-short-form-writer",
+  "repository": "https://github.com/alisadikinma/social-short-form-writer",
+  "license": "MIT",
+  "keywords": [
+    "instagram",
+    "tiktok",
+    "social-media",
+    "content-repurposing",
+    "blog-to-social",
+    "short-form",
+    "photo-carousel",
+    "vertical-video",
+    "hashtag-strategy",
+    "anti-ai-slop",
+    "claude-code"
+  ]
+}

@@ -1,0 +1,113 @@
+# social-short-form-writer
+
+Claude Code plugin for converting blog posts into native **Instagram** and **TikTok** captions, optimized for 2026 platform algorithms.
+
+Pure content generation — emits one JSON envelope to stdout per skill run. The consuming backend (e.g. [Portfolio_v2](https://github.com/alisadikinma/Portfolio_v2)) parses stdout, validates, and handles all operational concerns: OAuth/Publer transport, scheduling, FSM, approval gate, cancel window.
+
+## Skills
+
+| Skill | Purpose | Output schema |
+|---|---|---|
+| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5) | `InstagramOutputEnvelopeSchema` |
+| `/tiktok-gen` | Caption + 5-8 hashtags for TikTok photo-mode (9:16) | `TiktokOutputEnvelopeSchema` |
+
+## Why a separate plugin?
+
+This plugin is the third in a 3-tier publisher stack:
+
+```
+ai-image-carousel-prompt-gen   ← Universal slide image engine (4:5, reused everywhere)
+linkedin-post-writer            ← LinkedIn long-form text + carousel-format routing
+social-short-form-writer        ← THIS: IG + TikTok caption authoring
+```
+
+Facebook Page authoring is **NOT** in this plugin. The consuming backend handles FB:
+- **FB text format** → reuses `linkedin_posts.content` directly (LinkedIn already authored EN long-form)
+- **FB carousel format** → reuses `/instagram-gen` output (FB + IG carousel both 4:5 photo)
+
+This decision is documented in [Portfolio_v2 design doc 2026-05-08](https://github.com/alisadikinma/Portfolio_v2/blob/main/docs/plans/2026-05-08-cross-post-publer-integration.md). Saves ~1 day of plugin dev with acceptable FB performance trade-off.
+
+## Hard rules (encoded in Zod schemas)
+
+### `/instagram-gen`
+- Hashtags: **3-5 items HARDCAP** (Dec 2025 IG algorithm change penalizes 6+)
+- Caption: ≤2200 chars
+- Title (first-line hook): ≤125 chars
+- **NO link in caption** — IG canonical workflow puts link in bio or first comment
+- English authoring (mirrors `linkedin-post-writer` v0.6.0 directive)
+- No `music_suggestion` field (photo carousel = no audio track)
+
+### `/tiktok-gen`
+- Hashtags: 5-8 items
+- Caption: ≤2200 chars; **first 150 chars CRITICAL** for search index
+- Title (first-line hook): ≤100 chars (shorter than IG)
+- **Link in caption is OK** (TikTok allows it; many creators do this)
+- English authoring
+- No `music_suggestion` field — Publer auto-attaches trending music
+
+## Usage
+
+### CLI invocation (production — VPS-backed pipeline)
+
+```bash
+claude -p "/instagram-gen <blog-payload-json>" \
+  --model sonnet \
+  --append-system-prompt-file /home/claudesn/refs-instagram.md \
+  --mcp-config /home/claudesn/empty-mcp.json \
+  --strict-mcp-config \
+  --dangerously-skip-permissions
+```
+
+The skill reads the positional JSON arg, authors the caption, and emits ONE JSON envelope to stdout. The consuming Laravel `InstagramGenerationService` (in Portfolio_v2 backend) parses stdout via balanced-brace scanner, validates against the Zod schema, and advances the FSM.
+
+### Input shape
+
+See each skill's `SKILL.md` for the full `blog + content_idea + carousel_slides + format + posting_time_options` input contract.
+
+## Development
+
+```bash
+# Install deps
+npm install
+
+# Run tests
+npm test
+
+# Compile reference bundles (NOT committed — for VPS deploy)
+npm run compile-refs
+# Outputs: references/compiled/refs-instagram.md + refs-tiktok.md
+```
+
+## VPS Deployment
+
+After every release, the operator must redeploy compiled refs to the VPS:
+
+```bash
+# On VPS (claudesn user)
+cd ~/claude-plugins/social-short-form-writer
+git pull
+npm install
+npm run compile-refs
+
+# Symlink to home dir for easy --append-system-prompt-file path
+ln -sf "$(pwd)/references/compiled/refs-instagram.md" /home/claudesn/refs-instagram.md
+ln -sf "$(pwd)/references/compiled/refs-tiktok.md" /home/claudesn/refs-tiktok.md
+```
+
+The compiled bundles are gitignored (`references/compiled/`) — they're rebuilt fresh from `docs/rag/*` on each deploy so the source RAG content stays the single source of truth.
+
+## Backend integration
+
+The consuming backend ([Portfolio_v2](https://github.com/alisadikinma/Portfolio_v2)) wires this plugin via:
+
+- `App\Services\InstagramGenerationService` — SSH-invokes `/instagram-gen`
+- `App\Services\TiktokGenerationService` — SSH-invokes `/tiktok-gen`
+- `App\Services\FacebookGenerationService` — does NOT call this plugin; reuses LinkedIn or IG output
+- `App\Jobs\GenerateInstagramPost` / `GenerateTiktokPost` — queued wrappers
+- Env vars: `SOCIAL_GEN_REFS_INSTAGRAM`, `SOCIAL_GEN_REFS_TIKTOK`, `SOCIAL_GEN_MODEL=sonnet`, `SOCIAL_GEN_TIMEOUT_SECONDS=300`
+
+See [Portfolio_v2 root CLAUDE.md](https://github.com/alisadikinma/Portfolio_v2/blob/main/CLAUDE.md) section "Cross-Post Pipeline" for the full architecture.
+
+## License
+
+MIT — Ali Sadikin <ali.sadikincom85@gmail.com>
