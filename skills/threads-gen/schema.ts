@@ -15,7 +15,7 @@
  *   - title (preview-cut hook): ≤140 chars (Threads "more" cutoff)
  *   - caption: ≤500 chars (Threads platform limit)
  *   - sweet spot: 280-450 chars
- *   - language: 'id' | 'en' | 'mixed' (default 'mixed' — bilingual brand)
+ *   - language: 'id' | 'en' | 'mixed' (default 'id' — Indonesian audience target)
  *   - NO link in caption (Threads de-prioritizes body URLs same as IG)
  *   - NO music_suggestion (no audio on Threads photo posts)
  */
@@ -63,7 +63,7 @@ export const ThreadsCompleteEnvelopeSchema = z
     hashtags: z
       .array(HashtagSchema)
       .max(3, { message: 'Threads hashtags HARDCAP at 3 — algorithm penalty above' }),
-    language: z.enum(['id', 'en', 'mixed']).default('mixed'),
+    language: z.enum(['id', 'en', 'mixed']).default('id'),
     suggested_time_slot: ThreadsSuggestedTimeSlotSchema.optional(),
     validation: ThreadsValidationSchema,
   })

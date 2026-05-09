@@ -1,6 +1,6 @@
 ---
 name: tiktok-gen
-description: Convert a blog post (with optional pre-rendered carousel slides JSON) into a native TikTok caption + 5-8 hashtags + suggested posting time slot. Photo-mode (9:16 portrait) or short video format. English authoring. First 150 chars of caption are CRITICAL for search index. Music selection deferred to Publer (auto-attaches trending). Emits ONE JSON envelope to stdout matching `TiktokOutputEnvelopeSchema`.
+description: Convert a blog post (with optional pre-rendered carousel slides JSON) into a native TikTok caption + 5-8 hashtags + suggested posting time slot. Photo-mode (9:16 portrait) or short video format. Bahasa Indonesia authoring (Indonesian audience target). First 150 chars of caption are CRITICAL for search index. Music selection deferred to Publer (auto-attaches trending). Emits ONE JSON envelope to stdout matching `TiktokOutputEnvelopeSchema`.
 ---
 
 # /tiktok-gen — TikTok caption authoring skill
@@ -13,8 +13,13 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
 
 ## Hard Rules (validated by Zod schema — violations = failed envelope)
 
-1. **Authoring Language: ENGLISH.** Caption + title + hashtags all English.
-   Indonesian terms OK as cultural shorthand, but grammar must be English.
+1. **Authoring Language: BAHASA INDONESIA.** Caption + title primarily
+   Indonesian. English *terms* OK as cultural shorthand for tech concepts
+   (e.g. "AI agents", "vibe coding", "stack", "shipping") since target
+   audience already mixes EN tech vocabulary into ID conversation. But
+   grammar + connective tissue MUST be Indonesian. Hashtag tags can be
+   either ID (`#solopreneurID`, `#fyp`) or EN (`#aibuilders`, `#aiagents`)
+   — pick whichever has stronger discovery on TikTok ID locale.
 
 2. **Hashtag count: 5-8 items.** TikTok 2026 algorithm uses hashtags as
    primary search-index signal — fewer than 5 loses discoverability.
@@ -28,30 +33,31 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
 
 5. **First 150 chars of caption: SEARCH INDEX zone.** Must contain the
    primary keyword/topic + hook payoff. Avoid emoji-padded openings or
-   "Watch till the end..." filler. This is what TikTok's search algorithm
-   uses to surface your post in keyword queries.
+   "Tonton sampai habis..." filler. This is what TikTok's search algorithm
+   uses to surface your post in keyword queries. Primary keyword can be
+   English tech term (e.g. "AI agents") since search index is locale-aware.
 
 6. **Link in caption: OK.** Unlike Instagram, TikTok DOES allow body links
    (auto-detected, becomes tappable). If blog URL is provided, append at
-   end of caption: `\nFull breakdown: <url>`.
+   end of caption: `\nBaca selengkapnya: <url>`.
 
 7. **NO music_suggestion field.** Publer auto-attaches trending music for
    TikTok auto-publishing. Schema rejects this field if present.
 
-8. **Hook formula adherence.** First line must be ONE of:
-   - **Question hook** ("Why do most AI agents break in production?")
-   - **Number-led** ("3 things AI agents get wrong (and how to fix them).")
-   - **Stakes statement** ("If you're building AI agents in 2026, read this.")
-   - **Story opener** ("I shipped an AI agent that broke 4 times before it worked.")
-   - **Pattern interrupt** ("Stop building AI agents like it's 2024.")
+8. **Hook formula adherence.** First line must be ONE of (in Indonesian):
+   - **Question hook** ("Kenapa AI agents lo selalu rusak di production?")
+   - **Number-led** ("3 hal yang AI agents bikin salah (dan cara fix-nya).")
+   - **Stakes statement** ("Kalau lo lagi build AI agents di 2026, baca ini.")
+   - **Story opener** ("Gue ship AI agent yang rusak 4x sebelum work.")
+   - **Pattern interrupt** ("Stop bikin AI agents kayak masih 2024.")
    See `references/compiled/refs-tiktok.md` for full pattern bank.
 
 9. **Anti-AI-slop rubric.** Reject any output containing:
-   - "In today's fast-paced world"
-   - "Game-changer" / "revolutionize" / "leverage" / "synergy"
-   - "It's important to note that"
-   - "Let's dive in" / "Without further ado"
-   - "Did you know that..."  (engagement-bait opener)
+   - "Di era yang serba cepat ini" / "Di dunia yang berkembang pesat"
+   - "Game-changer" / "revolusioner" / "leverage" / "sinergi"
+   - "Penting untuk dicatat bahwa" / "Mari kita bahas"
+   - "Tanpa basa-basi" / "Yuk dive in"
+   - "Tahukah Anda?" (engagement-bait opener)
    - Emoji bullets used as visual structure on every line
    - Em-dashes (—) used as connective tissue ≥3 times in caption
 
@@ -64,8 +70,8 @@ Same shape as `/instagram-gen` but `format` field accepts:
 ```typescript
 {
   blog: {
-    title: string;            // EN
-    content: string;          // EN HTML body
+    title: string;            // ID — primary translation
+    content: string;          // ID HTML body
     excerpt?: string;
     meta_keywords?: string;
     slug: string;
@@ -97,9 +103,9 @@ Same shape as `/instagram-gen` but `format` field accepts:
 ```json
 {
   "status": "complete",
-  "title": "First-line hook ≤100 chars",
-  "caption": "First 150 chars MUST contain primary keyword + hook payoff. Story-arc body. Optional `Full breakdown: <url>` line at end. Max 2 emoji.",
-  "hashtags": ["#aibuilders", "#aiagents", "#claudecode", "#vibecoding", "#solopreneur", "#buildinpublic"],
+  "title": "Hook baris pertama ≤100 chars",
+  "caption": "150 chars pertama HARUS mengandung primary keyword + hook payoff. Body story-arc. Optional `Baca selengkapnya: <url>` di akhir. Max 2 emoji. Bahasa Indonesia.",
+  "hashtags": ["#aibuilders", "#aiagents", "#claudecode", "#vibecoding", "#solopreneurID", "#buildinpublic"],
   "suggested_time_slot": {
     "day_of_week": "wednesday",
     "hour": 20,
@@ -130,28 +136,31 @@ On failure:
    item) or infer from title.
 2. **Identify hook angle** — pick ONE of 5 hook formulas. Test against the
    blog's strongest claim. Reference `refs-tiktok.md` Hook Patterns.
-3. **Draft title (first-line hook)** — ≤100 chars. Punchier than IG.
+3. **Draft title (first-line hook)** — ≤100 chars. Bahasa Indonesia. Punchier than IG.
 4. **Draft caption body** — front-load primary keyword in first 150 chars.
    Photo-mode: 200-500 chars. Story arc compressed: hook → reveal → CTA.
-   Append blog URL if provided. Max 2 emoji TOTAL.
+   Append blog URL if provided (`Baca selengkapnya: <url>`). Max 2 emoji TOTAL.
+   Bahasa Indonesia conversational, NOT formal textbook ID.
 5. **Pick hashtags** — 5-8 items. Mix:
-   - 1-2 broad tags (`#aibuilders`, `#fyp` — but avoid generic `#fyp` unless
-     algo data justifies; prefer pillar-specific)
+   - 1-2 broad tags (`#aibuilders` — avoid generic `#fyp` unless algo data
+     justifies; prefer pillar-specific)
    - 2-3 niche tags (`#aiagents`, `#claudecode`, `#vibecoding`)
-   - 1-2 brand/identity tags (`#solopreneur`, `#alisadikinma`)
+   - 1-2 brand/identity tags (`#solopreneurID`, `#alisadikinma`)
 6. **Pick suggested_time_slot** — from `posting_time_options` if provided,
    else default `{day_of_week: 'wednesday', hour: 20, timezone: 'Asia/Jakarta'}`.
 7. **Run anti-slop check** — scan against banned phrases.
 8. **Run search-index check** — first 150 chars must contain primary keyword
-   ≥1 time (ideally 2x for strong signal).
+   ≥1 time (ideally 2x for strong signal). Primary keyword can be English
+   tech term — search index is locale-aware.
 9. **Emit JSON envelope to stdout.** End cleanly with `}`.
 
 ## Anti-patterns (auto-fail)
 
-- First 150 chars start with "✨ Hi everyone!" or any emoji-padded opener
+- First 150 chars start with "✨ Halo semua!" or any emoji-padded opener
 - Generic search keywords stuffed without context (`#viral #fyp #trending`)
-- Engagement-bait CTA ("Comment '🔥' if you agree!")
+- Engagement-bait CTA ("Comment '🔥' kalau setuju!")
 - Multiple emoji bullets used as structure
 - Mentioning specific dollar amounts without source
-- Promising "guaranteed" results
+- Promising "guaranteed" / "pasti berhasil" results
 - music_suggestion field present (schema-rejected)
+- Mixing formal Indonesian textbook style with casual TikTok tone

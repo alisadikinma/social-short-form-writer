@@ -6,10 +6,10 @@ import {
 
 const VALID_COMPLETE = {
   status: 'complete' as const,
-  title: 'Why most AI agents break in production (and how to fix it)',
+  title: 'Kenapa AI agents lo selalu rusak di production (dan cara fix-nya)',
   caption:
-    'AI agents fail in production for one reason: brittle prompt chains. After shipping 4 agents in 2025, here is the pattern that actually works — context-aware retry with structured fallback. The first 150 chars matter for TikTok search, so I am front-loading the keyword: AI agents production reliability. Full breakdown: https://alisadikinma.com/blog/ai-agents-production',
-  hashtags: ['#aibuilders', '#aiagents', '#claudecode', '#vibecoding', '#solopreneur', '#buildinpublic'],
+    'AI agents gagal di production karena satu hal: prompt chain yang rapuh. Setelah ship 4 agents di 2025, ini pola yang beneran kerja — context-aware retry dengan structured fallback. 150 chars pertama matter buat TikTok search, jadi gue front-load keyword: AI agents production reliability. Baca selengkapnya: https://alisadikinma.com/blog/ai-agents-production',
+  hashtags: ['#aibuilders', '#aiagents', '#claudecode', '#vibecoding', '#solopreneurID', '#buildinpublic'],
   suggested_time_slot: {
     day_of_week: 'wednesday' as const,
     hour: 20,
@@ -19,7 +19,7 @@ const VALID_COMPLETE = {
   validation: {
     passed: true,
     failures: [],
-    notes: ['First 150 chars contains primary keyword "AI agents" twice'],
+    notes: ['First 150 chars contains primary keyword "AI agents" twice, Bahasa Indonesia'],
   },
 };
 

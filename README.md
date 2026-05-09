@@ -8,9 +8,15 @@ Pure content generation — emits one JSON envelope to stdout per skill run. The
 
 | Skill | Purpose | Output schema | Tone |
 |---|---|---|---|
-| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5) | `InstagramOutputEnvelopeSchema` | English, narrative storytelling |
-| `/tiktok-gen` | Caption + 5-8 hashtags for TikTok photo-mode (9:16) | `TiktokOutputEnvelopeSchema` | English, search-index-aware first 150 chars |
-| `/threads-gen` | Caption + 0-3 hashtags for Threads text/carousel | `ThreadsOutputEnvelopeSchema` | Pro-but-conversational, ID+EN bilingual |
+| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5), optional `text_only_caption` for FB reuse | `InstagramOutputEnvelopeSchema` | Bahasa Indonesia, narrative storytelling |
+| `/tiktok-gen` | Caption + 5-8 hashtags for TikTok photo-mode (9:16) | `TiktokOutputEnvelopeSchema` | Bahasa Indonesia, search-index-aware first 150 chars |
+| `/threads-gen` | Caption + 0-3 hashtags for Threads text/carousel | `ThreadsOutputEnvelopeSchema` | Pro-but-conversational, Bahasa Indonesia (default `language: 'id'`) |
+
+**Authoring language policy (v0.3.0+):** All 3 skills default to Bahasa Indonesia
+(Indonesian audience target — Gen Z + founder/dev community). EN tech terms
+OK as cultural shorthand. LinkedIn (separate [`linkedin-post-writer`](https://github.com/alisadikinma/linkedin-post-writer)
+plugin) stays English-only — that plugin targets US hiring managers + B2B
+professional audience.
 
 ## Why a separate plugin?
 
@@ -37,15 +43,19 @@ Threads, by contrast, **IS** in this plugin (Tier-1) because Threads is the prim
 - Caption: ≤2200 chars
 - Title (first-line hook): ≤125 chars
 - **NO link in caption** — IG canonical workflow puts link in bio or first comment
-- English authoring (mirrors `linkedin-post-writer` v0.6.0 directive)
+- **Bahasa Indonesia authoring** (Indonesian audience target; EN tech terms OK as shorthand)
 - No `music_suggestion` field (photo carousel = no audio track)
+- **OPTIONAL `text_only_caption`** field (≤1000 chars, body URL allowed) — condensed
+  FB-text variant for cross-post reuse. Authored when input includes
+  `cross_post_targets: ['facebook']`. Read by Portfolio_v2's `FacebookGenerationService`.
 
 ### `/tiktok-gen`
 - Hashtags: 5-8 items
 - Caption: ≤2200 chars; **first 150 chars CRITICAL** for search index
 - Title (first-line hook): ≤100 chars (shorter than IG)
 - **Link in caption is OK** (TikTok allows it; many creators do this)
-- English authoring
+- **Bahasa Indonesia authoring** (Indonesian audience target; EN tech terms OK as shorthand)
+- Primary search keyword can be EN tech term (search index is locale-aware)
 - No `music_suggestion` field — Publer auto-attaches trending music
 
 ### `/threads-gen`
@@ -54,8 +64,8 @@ Threads, by contrast, **IS** in this plugin (Tier-1) because Threads is the prim
 - Title (preview-cut hook): ≤140 chars (Threads "more" cutoff on feed)
 - **NO link in caption** — Threads de-prioritizes body URLs; link goes in first reply or bio
 - **Pro-but-conversational tone** — capital case, witty + sharp, NEVER lowercase Gen-Z slang
-- **Bilingual ID+EN by default** — hook in EN (preview reach), body mixed (cultural shorthand), engagement question in ID (local algorithm boost). Schema field `language: 'id'|'en'|'mixed'`, default `mixed`.
-- 6 hook formulas: contrarian truth / number reveal / hidden cost / personal stake / bilingual code-switch / industry call-out
+- **Bahasa Indonesia by default** — caption + hook + engagement question all Indonesian. Schema field `language: 'id'|'en'|'mixed'`, **default `'id'`** (v0.3.0+; was `'mixed'` in v0.2.0). Caller may override to `'en'` for global thought-leadership posts or `'mixed'` for bilingual code-switch.
+- 6 hook formulas: contrarian truth / number reveal / hidden cost / personal stake / local context grounding / industry call-out
 
 ## Usage
 

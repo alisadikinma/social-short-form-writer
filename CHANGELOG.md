@@ -5,6 +5,61 @@ All notable changes to `social-short-form-writer` will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-05-10
+
+### Changed (BREAKING — output language flipped EN → ID)
+
+- **All 3 skills (`/instagram-gen`, `/tiktok-gen`, `/threads-gen`) now author in
+  Bahasa Indonesia by default.** Indonesian audience target (Gen Z + founder/dev
+  community). English *terms* OK as cultural shorthand for tech concepts
+  ("AI agents", "vibe coding", "shipping", "stack") — target audience already
+  mixes EN tech vocabulary into ID conversation. Grammar + connective tissue
+  MUST be Indonesian.
+  - LinkedIn (separate `linkedin-post-writer` plugin) stays English-only — that
+    plugin targets US hiring managers + B2B professional audience.
+- **Threads `language` field default**: `'mixed'` → `'id'`. Caller can still
+  override via input arg (`'en'` for global thought-leadership, `'mixed'` for
+  bilingual code-switch). Schema enum unchanged.
+- **IG / TikTok SKILL.md Hard Rule #1**: "ENGLISH" → "BAHASA INDONESIA". Hook
+  formula examples rewritten to Indonesian patterns ("Mayoritas founder...",
+  "3 pola yang gue liat...", "Alasan sebenarnya...").
+- **Anti-AI-slop rubric**: banned-phrase list now includes Indonesian variants
+  ("Di era yang serba cepat", "Yuk dive in", "Mari kita bahas",
+  "Tanpa basa-basi", "Adapun, hal yang ingin saya bagikan...") — formal
+  Indonesian textbook tone is auto-fail across all 3 skills.
+
+### Added
+
+- **`text_only_caption` field on `/instagram-gen`** (optional, ≤1000 chars,
+  body URL allowed). Condensed Bahasa Indonesia FB-text-post variant for
+  Facebook cross-post reuse. Backend's `FacebookGenerationService` reads
+  this when cross-post pipeline fans out to FB. SKILL.md Hard Rule #9
+  documents authoring guidelines (300-700 char sweet spot, append blog URL
+  line at end, no emoji-bullet structure). 5 new schema tests
+  (`text_only_caption` happy path + URL allowance + length cap +
+  optional-field-omitted + empty-string rejection).
+- **`cross_post_targets?: Array<'facebook' | 'tiktok' | 'threads'>` input
+  field on `/instagram-gen`**. When `'facebook'` is present, skill MUST
+  author `text_only_caption`. Backend `BaseSocialGenerationService`
+  populates this from the LinkedIn post's `auto_approve_cross_posts` flag.
+
+### Notes
+
+- 53 plugin tests pass (was 48 — added 5 IG `text_only_caption` cases).
+- RAG playbooks: Threads §01 + §03 rewritten with Indonesian examples + new
+  language directive ("Default `'id'`, override available"). IG §01 + TikTok
+  §05 prepended with explicit Bahasa Indonesia authoring directive.
+- Compiled bundles regenerate on `npm run compile-refs` — VPS deploy step
+  required to flip production behavior (manual operator action: `git pull`
+  plugin, `npm run compile-refs`, restart queue worker).
+- Consumer (Portfolio_v2) backend swap: `InstagramGenerationService`,
+  `TiktokGenerationService`, `ThreadsGenerationService` flip translation
+  preference EN → ID. `FacebookGenerationService` reads
+  `instagram_posts.text_only_caption` for FB text posts (replaces previous
+  reuse of `linkedin_posts.content` which is EN). Same commit.
+- LinkedIn behavior unchanged — `linkedin-post-writer` plugin authors EN,
+  `LinkedInGenerationService` continues to feed EN translation.
+
 ## [0.2.0] — 2026-05-10
 
 ### Added

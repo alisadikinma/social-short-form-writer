@@ -6,10 +6,10 @@ import {
 
 const VALID_COMPLETE = {
   status: 'complete' as const,
-  title: '3 patterns I see in every $0 → $10k MRR story',
+  title: '3 pola yang gue liat di setiap cerita $0 → $10k MRR',
   caption:
-    'Most founders chase the wrong leverage point. After looking at 40+ solo SaaS launches in 2025, three patterns kept showing up before the first $10k month — and none of them are about marketing. Here is what actually mattered. Comment your stage and I will share which pattern fits you.',
-  hashtags: ['#solopreneur', '#aibuilders', '#vibecoding', '#buildinpublic'],
+    'Mayoritas founder ngejar leverage point yang salah. Setelah liat 40+ launch SaaS solo di 2025, ada tiga pola yang konsisten muncul sebelum bulan $10k pertama — dan gak satupun soal marketing. Ini yang sebenernya berdampak. Comment stage lo, gue share pola mana yang cocok.',
+  hashtags: ['#solopreneurID', '#aibuilders', '#vibecoding', '#buildinpublic'],
   suggested_time_slot: {
     day_of_week: 'tuesday' as const,
     hour: 19,
@@ -19,7 +19,7 @@ const VALID_COMPLETE = {
   validation: {
     passed: true,
     failures: [],
-    notes: ['curiosity-gap hook + 4 hashtags within cap'],
+    notes: ['curiosity-gap hook + 4 hashtags within cap, Bahasa Indonesia'],
   },
 };
 
@@ -105,7 +105,7 @@ describe('InstagramOutputEnvelopeSchema — link-in-caption rule', () => {
     const bad = {
       ...VALID_COMPLETE,
       caption:
-        'Check out my latest article: https://alisadikinma.com/blog/example for details on the 3-pattern framework.',
+        'Cek artikel terbaru gue: https://alisadikinma.com/blog/example untuk detail framework 3-pola.',
     };
     const result = InstagramOutputEnvelopeSchema.safeParse(bad);
     expect(result.success).toBe(false);
@@ -119,13 +119,53 @@ describe('InstagramOutputEnvelopeSchema — link-in-caption rule', () => {
   it('REJECTS caption containing https URL', () => {
     const bad = {
       ...VALID_COMPLETE,
-      caption: 'Read more at https://example.com/article',
+      caption: 'Baca selengkapnya di https://example.com/article',
     };
     expect(InstagramOutputEnvelopeSchema.safeParse(bad).success).toBe(false);
   });
 
   it('accepts caption with no URL', () => {
     expect(InstagramOutputEnvelopeSchema.safeParse(VALID_COMPLETE).success).toBe(true);
+  });
+});
+
+describe('InstagramOutputEnvelopeSchema — text_only_caption (FB reuse variant)', () => {
+  it('accepts complete envelope with text_only_caption', () => {
+    const ok = {
+      ...VALID_COMPLETE,
+      text_only_caption:
+        'Mayoritas founder ngejar leverage point yang salah. Tiga pola yang konsisten muncul sebelum bulan $10k pertama — dan gak satupun soal marketing. Baca selengkapnya: https://alisadikinma.com/blog/3-patterns-mrr',
+    };
+    expect(InstagramOutputEnvelopeSchema.safeParse(ok).success).toBe(true);
+  });
+
+  it('accepts text_only_caption with body URL (FB tolerates body links)', () => {
+    const ok = {
+      ...VALID_COMPLETE,
+      text_only_caption: 'Versi padat untuk FB. Baca: https://alisadikinma.com/blog/x',
+    };
+    expect(InstagramOutputEnvelopeSchema.safeParse(ok).success).toBe(true);
+  });
+
+  it('REJECTS text_only_caption >1000 chars', () => {
+    const bad = {
+      ...VALID_COMPLETE,
+      text_only_caption: 'a'.repeat(1001),
+    };
+    const result = InstagramOutputEnvelopeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.map((i) => i.message).join(' | ')).toMatch(/≤1000 chars/i);
+    }
+  });
+
+  it('accepts envelope WITHOUT text_only_caption (field is optional)', () => {
+    expect(InstagramOutputEnvelopeSchema.safeParse(VALID_COMPLETE).success).toBe(true);
+  });
+
+  it('REJECTS empty-string text_only_caption', () => {
+    const bad = { ...VALID_COMPLETE, text_only_caption: '' };
+    expect(InstagramOutputEnvelopeSchema.safeParse(bad).success).toBe(false);
   });
 });
 

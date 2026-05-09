@@ -6,11 +6,11 @@ import {
 
 const VALID_COMPLETE = {
   status: 'complete' as const,
-  title: "Most 'AI agent' demos are just chatbots with extra steps.",
+  title: "Mayoritas demo 'AI agent' cuma chatbot dengan langkah ekstra.",
   caption:
-    "Most 'AI agent' demos are just chatbots with extra steps.\n\nReal agents have 3 things: planner, memory, tool registry.\nStrip any one and you are back to chat.\n\nBanyak founder Indonesia yang ngira udah bikin agent. Cek dulu yang mana yang missing.\n\nYang mana komponen agent yang paling sering diskip di project lo?",
+    "Mayoritas demo 'AI agent' cuma chatbot dengan langkah ekstra.\n\nAgent beneran punya 3 hal: planner, memory, tool registry.\nKurang satu — lo balik ke chat doang.\n\nBanyak founder Indonesia yang ngira udah bikin agent. Cek dulu komponen mana yang missing.\n\nKomponen agent mana yang paling sering diskip di project lo?",
   hashtags: ['#AIAgents', '#ClaudeCode'],
-  language: 'mixed' as const,
+  language: 'id' as const,
   suggested_time_slot: {
     day_of_week: 'wednesday' as const,
     hour: 20,
@@ -20,7 +20,7 @@ const VALID_COMPLETE = {
   validation: {
     passed: true,
     failures: [],
-    notes: ['Hook + body coupling clean, 2 hashtags within cap, ID+EN mix'],
+    notes: ['Hook + body coupling clean, 2 hashtags within cap, Bahasa Indonesia'],
   },
 };
 
@@ -144,10 +144,10 @@ describe('ThreadsOutputEnvelopeSchema — hard rule violations', () => {
 });
 
 describe('ThreadsOutputEnvelopeSchema — defaults + edge cases', () => {
-  it("defaults language to 'mixed' when omitted", () => {
+  it("defaults language to 'id' when omitted (Indonesian audience target)", () => {
     const { language: _, ...withoutLanguage } = VALID_COMPLETE;
     const result = ThreadsCompleteEnvelopeSchema.parse(withoutLanguage);
-    expect(result.language).toBe('mixed');
+    expect(result.language).toBe('id');
   });
 
   it('accepts caption right at 500-char hard cap', () => {

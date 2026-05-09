@@ -2,6 +2,14 @@
 
 **Summary:** Instagram captions for B2B carousels must hook in the first 125 characters, use line breaks for readability, and end with a specific (not generic) CTA. Sweet spot is 150–400 words for educational content.
 
+> **Authoring language: Bahasa Indonesia.** All caption output must be in Indonesian
+> (target audience: Indonesian Gen Z + founder/dev community). English *terms* OK
+> as cultural shorthand for tech concepts ("AI agents", "vibe coding", "shipping",
+> "stack", "founder") since target audience already mixes EN tech vocabulary into
+> ID conversation. Grammar + connective tissue MUST be Indonesian. Tone is casual
+> conversational (gue/lo register acceptable for blog-translation context, NOT
+> formal saya/Anda).
+
 ---
 
 ## Sources
@@ -19,7 +27,7 @@
 
 ## Rules
 
-1. **Hook within the first 125 characters.** Instagram truncates captions at approximately 125 characters before showing "...more". Everything before the truncation point is the preview — this is your primary real estate. Open with a provocative claim, a precise number, or a question that cannot be answered without tapping "more". Example: "95% of AI engineers skip this deployment step — it cost us 3 hours of downtime."
+1. **Hook within the first 125 characters.** Instagram truncates captions at approximately 125 characters before showing "...more". Everything before the truncation point is the preview — this is your primary real estate. Open with a provocative claim, a precise number, or a question that cannot be answered without tapping "more". Example (ID): "95% AI engineer skip langkah deployment ini — bikin kita downtime 3 jam."
 
 2. **Use hard line breaks between every sentence or idea.** Walls of text get scrolled past on mobile. Single-sentence lines with blank lines between them are proven to increase read-through rate. Instagram supports line breaks natively in the app but some third-party tools collapse them — verify rendering before publishing.
 

@@ -1,6 +1,6 @@
 ---
 name: instagram-gen
-description: Convert a blog post (with optional pre-rendered carousel slides JSON) into a native Instagram caption + 3-5 hashtags + suggested posting time slot. 4:5 photo carousel format. English authoring. Hard 5-hashtag cap (Dec 2025 algorithm change). NO link in caption — IG link belongs in bio or first comment. Emits ONE JSON envelope to stdout matching `InstagramOutputEnvelopeSchema`.
+description: Convert a blog post (with optional pre-rendered carousel slides JSON) into a native Instagram caption + 3-5 hashtags + suggested posting time slot. 4:5 photo carousel format. Bahasa Indonesia authoring (Indonesian audience target). Hard 5-hashtag cap (Dec 2025 algorithm change). NO link in caption — IG link belongs in bio or first comment. Optional text_only_caption field for Facebook text-post reuse. Emits ONE JSON envelope to stdout matching `InstagramOutputEnvelopeSchema`.
 ---
 
 # /instagram-gen — Instagram caption authoring skill
@@ -11,12 +11,20 @@ Reads a blog post + (optionally) carousel slide JSON from upstream pipeline,
 produces native Instagram caption matching 2026 algorithm rules. Emits ONE
 JSON envelope to stdout. Pure content generation — does NOT call backend API.
 
+Also authors an OPTIONAL `text_only_caption` (Bahasa Indonesia, ≤1000 chars,
+condensed FB-text variant) for Facebook cross-post reuse — Portfolio_v2's
+`FacebookGenerationService` reads this when the cross-post pipeline fans
+out to FB text posts.
+
 ## Hard Rules (validated by Zod schema — violations = failed envelope)
 
-1. **Authoring Language: ENGLISH.** Caption + title + hashtags all English.
-   Indonesian *terms* OK as cultural shorthand (e.g. "warung", "ojek") if the
-   blog is Indonesia-context, but grammar + connective tissue must be English.
-   Mirrors `linkedin-post-writer` v0.6.0 directive.
+1. **Authoring Language: BAHASA INDONESIA.** Caption + title + hashtags
+   primarily Indonesian. English *terms* OK as cultural shorthand for tech
+   concepts (e.g. "AI agents", "vibe coding", "shipping", "stack") since
+   target audience already mixes EN tech vocabulary into ID conversation.
+   But grammar + connective tissue MUST be Indonesian. Hashtag tags can be
+   either ID (`#solopreneurID`) or EN (`#aibuilders`) — pick whichever has
+   stronger discovery on IG ID locale.
 
 2. **Hashtag count: 3-5 items HARDCAP.** Instagram's Dec 2025 algorithm
    change penalizes posts with 6+ hashtags (treated as spam signal).
@@ -35,21 +43,28 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
 6. **NO music_suggestion field.** IG photo carousel = no audio track.
    That's a TikTok-only field and Publer auto-handles TikTok music anyway.
 
-7. **Hook formula adherence.** First line must be ONE of:
-   - **Curiosity gap** ("Most founders get [X] wrong — here's why...")
-   - **Bold contrarian** ("[Common belief] is actually killing your [outcome].")
-   - **Numbered reveal** ("3 patterns I see in every $0 → $10k MRR story.")
-   - **Personal stake** ("I shipped 4 products in 2 years. Only 1 made money.")
-   - **Hidden cost** ("The real reason your [thing] isn't [outcome] (and it's not [obvious thing]).")
+7. **Hook formula adherence.** First line must be ONE of (in Indonesian):
+   - **Curiosity gap** ("Mayoritas founder salah ngerti soal [X] — ini alasannya...")
+   - **Bold contrarian** ("[Kepercayaan umum] sebenarnya bunuh [outcome] lo.")
+   - **Numbered reveal** ("3 pola yang gue liat di tiap cerita $0 → $10k MRR.")
+   - **Personal stake** ("Gue ship 4 produk dalam 2 tahun. Cuma 1 yang menghasilkan.")
+   - **Hidden cost** ("Alasan sebenarnya kenapa [thing] lo gak [outcome] (dan bukan [obvious thing]).")
    See `references/compiled/refs-instagram.md` for full pattern bank.
 
 8. **Anti-AI-slop rubric.** Reject any output containing:
-   - "In today's fast-paced world"
-   - "Game-changer" / "revolutionize" / "leverage" / "synergy"
-   - "It's important to note that"
-   - "Let's dive in" / "Without further ado"
+   - "Di era yang serba cepat ini" / "Di dunia yang berkembang pesat"
+   - "Game-changer" / "revolusioner" / "leverage" / "sinergi"
+   - "Penting untuk dicatat bahwa" / "Mari kita bahas"
+   - "Tanpa basa-basi" / "Yuk dive in"
    - Em-dashes (—) used as connective tissue ≥3 times in caption
    - Emoji bullets (✅ 🚀 💡) on every line — max 2 emoji per caption
+
+9. **text_only_caption (OPTIONAL — author when blog has FB cross-post target).**
+   ≤1000 chars. Same Bahasa Indonesia tone but condensed (300-700 chars
+   sweet spot for FB News Feed). Body URL is OK here (FB tolerates it).
+   Same hook formula as main caption but punchier — FB readers expect
+   shorter posts than IG. NO emoji bullet structure. End with engagement
+   question OR blog URL line `Baca selengkapnya: <url>`.
 
 ## Input shape
 
@@ -58,11 +73,12 @@ The skill accepts ONE positional arg: a JSON string with this structure:
 ```typescript
 {
   blog: {
-    title: string;            // EN — already translated by article-translate
-    content: string;           // EN HTML body
+    title: string;            // ID — primary translation (post_translations.id)
+    content: string;           // ID HTML body
     excerpt?: string;
     meta_keywords?: string;    // comma-separated SEO terms
     slug: string;
+    blog_url?: string;         // Full URL — used in text_only_caption when authored
   };
   content_idea?: {
     pillar: 'vibe_coding' | 'ai_agents' | 'ai_video_image' | 'ai_automation' | 'manufacturing';
@@ -84,6 +100,8 @@ The skill accepts ONE positional arg: a JSON string with this structure:
     score: number;
     rationale: string;
   }>;
+  cross_post_targets?: Array<'facebook' | 'tiktok' | 'threads'>; // OPTIONAL —
+    // when 'facebook' is present, MUST author text_only_caption.
 }
 ```
 
@@ -92,8 +110,9 @@ The skill accepts ONE positional arg: a JSON string with this structure:
 ```json
 {
   "status": "complete",
-  "title": "First-line hook ≤125 chars (curiosity gap or contrarian)",
-  "caption": "Full body 1200-1800 char sweet spot. Story-arc structure: hook → setup → tension → reveal → CTA. NO URL. Max 2 emoji.",
+  "title": "Hook baris pertama ≤125 chars (curiosity gap atau contrarian)",
+  "caption": "Body lengkap 1200-1800 char sweet spot. Struktur story-arc: hook → setup → tension → reveal → CTA. NO URL. Max 2 emoji. Bahasa Indonesia.",
+  "text_only_caption": "Versi padat untuk FB ≤1000 chars (300-700 sweet spot). URL di body OK. Bahasa Indonesia. Engagement question atau blog URL line di akhir.",
   "hashtags": ["#aibuilders", "#vibecoding", "#solopreneur", "#productled", "#buildinpublic"],
   "suggested_time_slot": {
     "day_of_week": "tuesday",
@@ -104,7 +123,7 @@ The skill accepts ONE positional arg: a JSON string with this structure:
   "validation": {
     "passed": true,
     "failures": [],
-    "notes": ["Caption uses curiosity-gap hook + 4 hashtags (within 3-5 cap)"]
+    "notes": ["Caption pakai curiosity-gap hook + 4 hashtags (within 3-5 cap), text_only_caption authored for FB reuse"]
   }
 }
 ```
@@ -121,35 +140,44 @@ On failure (RAG missing, parse error from upstream, guideline conflict):
 
 ## Step-by-step (Sonnet executes)
 
-1. **Read blog content** from input arg `blog.content` + `blog.title`
-   (already English).
+1. **Read blog content** from input arg `blog.content` + `blog.title` (primary
+   Indonesian translation). Note `cross_post_targets` array — if `'facebook'`
+   present, MUST author `text_only_caption` in step 5b.
 2. **Identify hook angle** — pick ONE of 5 hook formulas based on which
    matches the blog's strongest claim. Check `refs-instagram.md` Hook Patterns
    section for examples.
-3. **Draft title (first-line hook)** — ≤125 chars. Test: would a stranger
-   stop scrolling on this? If feels generic, regenerate with bolder framing.
+3. **Draft title (first-line hook)** — ≤125 chars. Bahasa Indonesia. Test:
+   would a stranger stop scrolling on this? If feels generic, regenerate
+   with bolder framing.
 4. **Draft caption body** — story arc: hook (echo title) → setup (1-2
    sentences context) → tension (the surprising/contrarian beat) → reveal
    (the actual insight) → CTA (1 line — comment prompt or bio-link nudge).
-   Target 1200-1800 chars. Max 2 emoji TOTAL in entire caption.
-5. **Pick hashtags** — 3-5 items. Mix:
+   Target 1200-1800 chars. Max 2 emoji TOTAL in entire caption. Bahasa
+   Indonesia natural conversation tone, NOT formal/textbook ID.
+5. **(Conditional) Draft text_only_caption** — only when `cross_post_targets`
+   includes `'facebook'`. ≤1000 chars (300-700 sweet spot). Same hook
+   formula but punchier. Append blog URL line at end: `Baca selengkapnya:
+   <blog.blog_url>`. Skip emoji-bullet structure.
+6. **Pick hashtags** — 3-5 items. Mix:
    - 1-2 broad pillar tags (`#aibuilders`, `#vibecoding`)
-   - 1-2 niche tags (`#solopreneurAI`, `#claudecode`)
+   - 1-2 niche tags (`#solopreneurID`, `#claudecode`)
    - 0-1 brand tag (`#alisadikinma`)
-6. **Pick suggested_time_slot** — if `posting_time_options[]` provided, pick
+7. **Pick suggested_time_slot** — if `posting_time_options[]` provided, pick
    the highest-score slot ≥85. Else default `{day_of_week: 'tuesday', hour: 19, timezone: 'Asia/Jakarta'}`.
-7. **Run anti-slop check** — scan caption against banned phrases (Hard Rule 8).
-   If any match, regenerate that paragraph.
-8. **Run hashtag count check** — must be 3-5. If 6+, drop to 5.
-9. **Emit JSON envelope to stdout.** No prose preamble, no fenced code blocks
-   ideally — but balanced-brace parser tolerates them. End cleanly with `}`.
+8. **Run anti-slop check** — scan caption (and text_only_caption if present)
+   against banned phrases (Hard Rule 8). If any match, regenerate that paragraph.
+9. **Run hashtag count check** — must be 3-5. If 6+, drop to 5.
+10. **Emit JSON envelope to stdout.** No prose preamble, no fenced code blocks
+    ideally — but balanced-brace parser tolerates them. End cleanly with `}`.
 
 ## Anti-patterns (auto-fail)
 
-- Caption opens with "In a world where..." or "Let's talk about..."
-- Generic CTA ("Drop a 🔥 if you agree!" — too engagement-bait-y)
+- Caption opens with "Di era ini..." or "Mari kita bahas tentang..."
+- Generic CTA ("Tap 🔥 kalau setuju!" — too engagement-bait-y)
 - Multiple emoji bullets used as visual structure (`✅ Point 1\n✅ Point 2`)
 - Hashtag list in body separator (must be at end, single line, space-separated)
 - Mentioning specific dollar amounts without source
-- Claiming to be "the only" / "the best" / "the first"
+- Claiming to be "satu-satunya" / "yang terbaik" / "yang pertama"
 - Empty validation.failures[] WITH validation.passed=false (contradictory)
+- Mixing formal Indonesian textbook style with casual ("Adapun, hal yang ingin saya bagikan...")
+- text_only_caption field present but `cross_post_targets` does NOT include `'facebook'` (waste)

@@ -15,7 +15,10 @@
  *   - caption: ≤2200 chars (IG hard limit)
  *   - NO link in caption (IG canonical workflow — link goes in bio or first comment)
  *   - NO music_suggestion field (IG carousel is photo-mode, no music)
- *   - English authoring (mirrors linkedin-post-writer v0.6.0 directive)
+ *   - Indonesian authoring (Bahasa Indonesia primary — Indonesian audience target)
+ *   - text_only_caption (OPTIONAL): condensed FB-text variant for cross-post reuse,
+ *     ≤1000 chars, body URL allowed (FB tolerates body links). Backend's
+ *     FacebookGenerationService reads this for FB text posts.
  */
 
 import { z } from 'zod';
@@ -60,6 +63,11 @@ export const InstagramCompleteEnvelopeSchema = z
       .string()
       .min(1)
       .max(2200, { message: 'caption must be ≤2200 chars (IG hard limit)' }),
+    text_only_caption: z
+      .string()
+      .min(1)
+      .max(1000, { message: 'text_only_caption must be ≤1000 chars (FB text-post variant)' })
+      .optional(),
     hashtags: z
       .array(HashtagSchema)
       .min(3, { message: 'IG hashtags must be ≥3' })
@@ -97,6 +105,10 @@ export const InstagramOutputEnvelopeSchema = z
         message: 'caption must not contain a URL — IG link belongs in bio or first comment',
       });
     }
+
+    // text_only_caption (FB reuse variant) — body URL is OK on FB, but
+    // skill should keep this concise (FB engagement drops past ~800 chars).
+    // No URL validation here — FB text posts allow body links.
   });
 
 export type InstagramSuggestedTimeSlot = z.infer<typeof InstagramSuggestedTimeSlotSchema>;

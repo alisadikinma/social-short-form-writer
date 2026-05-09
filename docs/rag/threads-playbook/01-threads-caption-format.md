@@ -33,14 +33,21 @@ What to avoid:
 - LinkedIn-tier formal ("In today's rapidly evolving AI landscape...")
 - Engagement bait ("Drop a 🔥 if you agree", "Comment YES if you're with me")
 
-## Bilingual support
+## Authoring language
 
-Threads audience in Indonesia is bilingual. Default authoring strategy:
-- **Hook in English** (preview cut — broader reach via global discovery)
-- **Body in Indonesian + English mix** (cultural shorthand: "warung", "ojek", "founders Indonesia")
+Default: **Bahasa Indonesia.** Indonesian audience target — Gen Z + founder/dev community.
+
+- **Hook in Indonesian** (preview cut — must read native to local audience scrolling Threads)
+- **Body in Indonesian** with English *terms* OK as cultural shorthand for tech concepts
+  ("AI agents", "vibe coding", "shipping", "stack", "founder", "ship") — target audience
+  already mixes EN tech vocabulary into ID conversation
 - **Engagement question in Indonesian** (invites local replies — algorithm boosts conversation thread)
+- Grammar + connective tissue MUST be Indonesian (gue/lo casual register, NOT formal saya/Anda)
 
-Schema accepts `language: 'id' | 'en' | 'mixed'` field. Default `mixed` for the brand's Indonesian-primary audience with English thought-leadership reach.
+Schema accepts `language: 'id' | 'en' | 'mixed'` field. **Default `'id'`.** Caller may
+override to `'en'` for special cases (e.g. global thought-leadership posts targeting US/EU
+hiring managers — but those typically belong on LinkedIn, not Threads). `'mixed'` mode
+remains available as opt-in but is no longer default.
 
 ## Link strategy
 
@@ -53,16 +60,16 @@ Schema accepts `language: 'id' | 'en' | 'mixed'` field. Default `mixed` for the 
 
 ### Good (preview-cut hook + setup + take)
 
-> Most "AI agent" demos are just chatbots with extra steps.
+> Mayoritas demo "AI agent" cuma chatbot dengan langkah ekstra.
 >
-> Real agents have 3 things: planner, memory, tool registry.
-> Strip any one — you're back to chat.
+> Agent beneran punya 3 hal: planner, memory, tool registry.
+> Kurang satu — lo balik ke chat doang.
 >
-> Banyak founder Indonesia yang ngira udah bikin agent. Cek dulu yang mana yang missing.
+> Banyak founder Indonesia yang ngira udah bikin agent. Cek dulu komponen mana yang missing.
 >
-> Yang mana komponen agent yang paling sering diskip di project lo?
+> Komponen agent mana yang paling sering diskip di project lo?
 
-(412 chars, ID+EN mix, contrarian hook fits preview)
+(405 chars, Bahasa Indonesia with EN tech terms as cultural shorthand, contrarian hook fits preview)
 
 ### Bad (lowercase Gen-Z slang)
 

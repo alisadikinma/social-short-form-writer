@@ -2,6 +2,14 @@
 
 **Summary:** TikTok Photo Mode captions should be 150–300 characters for standard B2B content, or 500+ characters for SEO-focused educational posts. Front-load the primary keyword in the first 150 characters; captions are now a primary search-index signal on TikTok.
 
+> **Authoring language: Bahasa Indonesia.** All caption output must be in Indonesian
+> (target audience: Indonesian Gen Z + founder/dev community). English *terms* OK
+> as cultural shorthand for tech concepts ("AI agents", "vibe coding", "shipping",
+> "stack") since target audience already mixes EN tech vocabulary into ID conversation.
+> Primary search keyword can be EN tech term (search index is locale-aware). Grammar
+> + connective tissue MUST be Indonesian. Tone casual conversational (gue/lo
+> register acceptable, NOT formal saya/Anda).
+
 ---
 
 ## Sources
