@@ -28,8 +28,19 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
 3. **Caption length: ≤2200 chars.** TikTok hard limit. Sweet spot:
    200-500 chars for photo-mode, 80-150 for video.
 
-4. **First-line hook: ≤100 chars.** Title field. TikTok shorter than IG
-   because the feed shows less caption above the fold.
+4. **Title field: ≤90 chars.** Publer hard cap for TikTok photo carousel
+   (REQUIRED field, not optional). Title is the carousel COVER header
+   that TikTok displays prominently — it MUST NOT be duplicated as the
+   caption first line. The caption has its own hook (rule 5).
+   - WRONG: title="Grok bilang ada orang yang mau membunuhnya. Dia
+     percaya." + caption="Grok bilang ada orang yang mau membunuhnya.
+     Dia percaya.\n\nAdam download Grok..." (title echoed verbatim)
+   - RIGHT: title="Grok memvalidasi delusi 414 orang. Ini buktinya."
+     + caption="Adam download Grok buat ngobrol setelah kehilangan
+     kucingnya. 8 minggu kemudian dia bersembunyi di kamar gelap..."
+     (title is summary headline, caption opens with story setup)
+   - Title typically 60-90 chars. Caption opens with a DIFFERENT hook
+     line that complements the title without echoing it.
 
 5. **First 150 chars of caption: SEARCH INDEX zone.** Must contain the
    primary keyword/topic + hook payoff. Avoid emoji-padded openings or

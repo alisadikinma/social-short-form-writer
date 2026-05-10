@@ -53,7 +53,7 @@ export const TiktokCompleteEnvelopeSchema = z
     title: z
       .string()
       .min(1)
-      .max(100, { message: 'title (first-line hook) must be ≤100 chars on TikTok' }),
+      .max(90, { message: 'title must be ≤90 chars (Publer TikTok photo carousel hard cap)' }),
     caption: z
       .string()
       .min(1)

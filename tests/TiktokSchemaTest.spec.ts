@@ -69,14 +69,14 @@ describe('TiktokOutputEnvelopeSchema — hashtag bounds (5-8)', () => {
   });
 });
 
-describe('TiktokOutputEnvelopeSchema — title length (≤100, shorter than IG)', () => {
-  it('REJECTS title >100 chars', () => {
-    const bad = { ...VALID_COMPLETE, title: 'a'.repeat(101) };
+describe('TiktokOutputEnvelopeSchema — title length (≤90 Publer hard cap)', () => {
+  it('REJECTS title >90 chars', () => {
+    const bad = { ...VALID_COMPLETE, title: 'a'.repeat(91) };
     expect(TiktokOutputEnvelopeSchema.safeParse(bad).success).toBe(false);
   });
 
-  it('accepts exactly 100-char title', () => {
-    const ok = { ...VALID_COMPLETE, title: 'a'.repeat(100) };
+  it('accepts exactly 90-char title', () => {
+    const ok = { ...VALID_COMPLETE, title: 'a'.repeat(90) };
     expect(TiktokOutputEnvelopeSchema.safeParse(ok).success).toBe(true);
   });
 });
