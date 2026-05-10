@@ -5,6 +5,52 @@ All notable changes to `social-short-form-writer` will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-05-10
+
+### Changed (BREAKING — caption length defaults flipped per 2026 engagement data)
+
+- **`/instagram-gen` Hard Rule #3 + Step 4**: caption sweet spot **1200-1800
+  chars → 100-300 chars default** (~15-50 words). Per Socialinsider 9M+ post
+  study: captions <30 words drive HIGHEST engagement because slides carry the
+  value, caption is the conversational frame. Long-form 700-1500 chars is now
+  a deliberate exception (only when slides don't carry the full insight AND
+  every sentence earns its place). AVOID 300-700 char no-man's-land.
+- **`/tiktok-gen` Hard Rule #3 + Step 4**: caption sweet spot **200-500 chars
+  → 80-150 chars default** (~12-25 words). Per TTS Vibes / Glow Social 2026
+  analytics: captions 50-100 chars get +21% likes vs longer captions. Front-load
+  primary keyword in first 80-100 chars (preview cutoff + search-index zone).
+  Extend to 200-400 only for SEO-driven educational posts. AVOID 400+ chars
+  (TikTok scroll is faster than IG).
+- **`/threads-gen`**: 280-450 sweet spot unchanged (Threads is thought-leadership
+  format — needs more dwell than IG/TikTok), but first-210-char preview-cut
+  payoff requirement made explicit.
+
+### Added (NEW Hard Rule across all 3 skills — HOOK QUALITY GATE)
+
+- **`/instagram-gen` Hard Rule #9, `/tiktok-gen` Hard Rule #10, `/threads-gen`
+  Hard Rule #10**: first sentence MUST pass all 5 tests before envelope emission:
+  1. **Standalone-readable** — works as complete thought even if reader never
+     taps "more" (60-70% of IG readers stop at preview cutoff)
+  2. **Specific** — numbers, named tools, dated stakes; NEVER vague abstractions
+     (❌ "AI agents punya banyak masalah" → ✅ "Gue ship 4 AI agents 2025.
+     3 rusak di production karena 1 hal yang sama.")
+  3. **Curiosity-gap or pattern-interrupt** — reader can't predict the payoff
+     from the hook alone
+  4. **Native voice** — NOT LinkedIn-formal, NOT Gen-Z slang; Bahasa Indonesia
+     conversational dengan EN tech terms sebagai shorthand
+  5. **Payoff within preview window** — IG 200 chars, TikTok 80 chars, Threads
+     210 chars; hook + body line 1-2 must deliver surprise before "more" cutoff
+- If first sentence fails ANY test → regenerate. Do not ship a weak hook to fit
+  length targets.
+
+### Documentation
+
+- RAG playbook updates (`docs/rag/instagram-playbook/01-instagram-caption-format.md`,
+  `docs/rag/tiktok-playbook/05-tiktok-caption-format.md`,
+  `docs/rag/threads-playbook/01-threads-caption-format.md`) with new length tier
+  + Hook Quality Gate sections + 2 new sources (Socialinsider 9M+ posts study,
+  Buffer IG Algorithm 2026).
+
 ## [0.4.0] — 2026-05-10
 
 ### Changed

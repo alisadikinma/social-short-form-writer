@@ -79,6 +79,49 @@ content from social-base/ into a platform-playbook/ — extend, don't repeat.
 
 ## Skill design decisions (and why)
 
+### Hook Quality Gate (v0.5.0+, cross-cutting)
+
+All 3 skills enforce a 5-test rubric on the first sentence as a Hard Rule
+before envelope emission. This is the highest-leverage rule in the plugin
+because for 60-70% of readers (per IG/TikTok preview-cutoff data) the first
+sentence IS the entire post — they never tap "more". The 5 tests:
+
+1. **Standalone-readable** — works as a complete thought even at preview cutoff
+2. **Specific** — numbers, named tools, dated stakes; NEVER vague abstractions
+3. **Curiosity-gap or pattern-interrupt** — payoff can't be predicted from hook
+4. **Native voice** — NOT LinkedIn-formal, NOT Gen-Z slang
+5. **Payoff lands within preview window** — IG 200 chars, TikTok 80 chars,
+   Threads 210 chars
+
+When the first sentence fails any test, the Sonnet runtime regenerates rather
+than ships a weak hook to fit length targets. This rule is implemented as
+prose Hard Rules in each SKILL.md (Hard Rule #9 IG, #10 TikTok, #10 Threads)
++ mirrored in the RAG playbooks. NOT enforced by Zod schema — it's a
+quality-gate semantic rule, not a structural constraint.
+
+The reason this rule exists: pre-v0.5.0 captions defaulted to long-form
+(1200-1800 chars on IG, 200-500 on TikTok) which incentivized weak openers
+because the body could "make up for it". Post-v0.5.0 the length defaults
+flipped to engagement-data sweet spots (100-300 IG / 80-150 TikTok) — at
+those lengths the hook IS the post. No room for filler.
+
+### Caption length tier system (v0.5.0+, cross-cutting)
+
+Per 2026 engagement data:
+
+| Platform | Hard cap | Default sweet spot | Source |
+|---|---|---|---|
+| IG | 2200 chars | **100-300 chars** (~15-50 words) | Socialinsider 9M+ posts study — captions <30 words = highest engagement |
+| TikTok | 2200 chars | **80-150 chars** (~12-25 words) | TTS Vibes / Glow Social 2026 — 50-100 chars +21% likes vs longer |
+| Threads | 500 chars | 280-450 chars (unchanged) | Thought-leadership format needs more dwell |
+
+Long-form is now an exception, not default. IG long-form (700-1500 chars)
+ships only when slides genuinely don't carry the full insight AND every
+sentence earns its place. TikTok long-form (200-400 chars) ships only for
+SEO-driven educational posts. The 300-700 char range on IG and 400+ on
+TikTok are explicitly forbidden — too long for fast scroll, too short for
+authority depth.
+
 ### IG: hashtag cap 3-5, Bahasa Indonesia, optional text_only_caption for FB reuse
 
 - Pre-Dec 2025 IG algorithm rewarded 10+ hashtags. Post-update, 6+ flagged as
@@ -112,8 +155,11 @@ content from social-base/ into a platform-playbook/ — extend, don't repeat.
 
 - Threads minimal hashtag culture (May 2026 algorithm) — 4+ hashtags = spam
   signal. Schema enforces max 3, allows 0.
-- 280-450 char sweet spot vs IG's 1200-1800 — Threads is conversational
-  brevity, not narrative storytelling.
+- 280-450 char sweet spot — Threads is the only one of the 3 with a higher
+  default than IG (100-300) or TikTok (80-150) because it's a thought-leadership
+  format that rewards dwell time. The 210-char preview cutoff means hook +
+  setup must land before "more"; the rest of the 280-450 window is the take +
+  engagement question.
 - 140-char preview-cut hook is the make-or-break: posts that don't pay off
   the preview within 100 body chars get scroll-past + algorithm penalty.
 - **Bahasa Indonesia default (v0.3.0+)** — `language: 'id' | 'en' | 'mixed'`,
@@ -297,15 +343,32 @@ the LLM actually reads, so it must match.
 
 ---
 
-**Last Updated:** May 10, 2026 — **v0.3.0 BREAKING: authoring language flipped
-EN → Bahasa Indonesia across all 3 skills.** Indonesian audience target (Gen Z
-+ founder/dev community). LinkedIn (separate plugin) stays EN for US hiring
-manager target. Threads `language` field default flipped `'mixed'` → `'id'`.
-IG gains optional `text_only_caption` field (≤1000 chars, body URL OK,
-Bahasa Indonesia) for FB cross-post text reuse — replaces prior reuse-of-LinkedIn
-path. 53 schema tests passing (was 48 — added 5 IG `text_only_caption` cases).
-Plugin v0.2.0 (May 10 morning) shipped `/threads-gen` Tier-1; v0.3.0 (May 10
-afternoon) flipped language strategy.
+**Last Updated:** May 10, 2026 (evening) — **v0.5.0 BREAKING: caption length
+defaults flipped per 2026 engagement data + NEW Hook Quality Gate (5-test
+rubric) across all 3 skills.** IG default 1200-1800 chars → **100-300 chars**
+(Socialinsider 9M+ posts study: <30 words = highest engagement). TikTok default
+200-500 chars → **80-150 chars** (TTS Vibes 2026: 50-100 chars +21% likes vs
+longer). Threads 280-450 unchanged (thought-leadership format). NEW Hard Rule
+across all 3 skills: first sentence MUST pass Hook Quality Gate (standalone-
+readable / specific / curiosity-gap / native voice / payoff within preview
+window) before envelope emission — weak hooks regenerated, never shipped to
+fit length targets. Long-form is now an exception, not default. RAG playbooks
+updated with new length tiers + hook gate sections (added Socialinsider +
+Buffer IG 2026 sources). 53 schema tests passing.
+
+**v0.4.x (May 10 morning):** v0.4.0 forbade "link di bio" CTA across IG +
+Threads (link goes to FIRST COMMENT via Publer; operator does NOT update bio
+per-post). v0.4.1 reduced TikTok title cap 100 → 90 chars (Publer hard limit
+for TikTok photo carousel) + made title MUST NOT echo caption first line.
+
+**v0.3.0 (May 10 afternoon):** authoring language flipped EN → Bahasa Indonesia
+across all 3 skills. Indonesian audience target (Gen Z + founder/dev community).
+LinkedIn (separate plugin) stays EN for US hiring manager target. Threads
+`language` field default flipped `'mixed'` → `'id'`. IG gained optional
+`text_only_caption` field (≤1000 chars, body URL OK, Bahasa Indonesia) for FB
+cross-post text reuse — replaces prior reuse-of-LinkedIn path.
+
+**v0.2.0 (May 10 morning):** shipped `/threads-gen` Tier-1.
 **Maintainer:** Ali Sadikin <ali.sadikincom85@gmail.com>
 **Consumer:** [Portfolio_v2](https://github.com/alisadikinma/Portfolio_v2) (Laravel 12 + Vue 3)
 **Sister plugins:** `linkedin-post-writer`, `ai-image-carousel-prompt-gen`

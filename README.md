@@ -8,15 +8,24 @@ Pure content generation — emits one JSON envelope to stdout per skill run. The
 
 | Skill | Purpose | Output schema | Tone |
 |---|---|---|---|
-| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5), optional `text_only_caption` for FB reuse | `InstagramOutputEnvelopeSchema` | Bahasa Indonesia, narrative storytelling |
-| `/tiktok-gen` | Caption + 5-8 hashtags for TikTok photo-mode (9:16) | `TiktokOutputEnvelopeSchema` | Bahasa Indonesia, search-index-aware first 150 chars |
-| `/threads-gen` | Caption + 0-3 hashtags for Threads text/carousel | `ThreadsOutputEnvelopeSchema` | Pro-but-conversational, Bahasa Indonesia (default `language: 'id'`) |
+| `/instagram-gen` | Caption + 3-5 hashtags for IG photo carousel (4:5), default 100-300 chars (Socialinsider 9M+ posts study), optional `text_only_caption` for FB reuse | `InstagramOutputEnvelopeSchema` | Bahasa Indonesia, short-form scroll-stopper |
+| `/tiktok-gen` | Caption + 5-8 hashtags + ≤90 char title for TikTok photo-mode (9:16), default 80-150 chars (+21% likes vs longer per TTS Vibes 2026) | `TiktokOutputEnvelopeSchema` | Bahasa Indonesia, search-index-aware first 80-100 chars |
+| `/threads-gen` | Caption + 0-3 hashtags for Threads text/carousel, 280-450 thought-leadership sweet spot | `ThreadsOutputEnvelopeSchema` | Pro-but-conversational, Bahasa Indonesia (default `language: 'id'`) |
 
 **Authoring language policy (v0.3.0+):** All 3 skills default to Bahasa Indonesia
 (Indonesian audience target — Gen Z + founder/dev community). EN tech terms
 OK as cultural shorthand. LinkedIn (separate [`linkedin-post-writer`](https://github.com/alisadikinma/linkedin-post-writer)
 plugin) stays English-only — that plugin targets US hiring managers + B2B
 professional audience.
+
+**Hook Quality Gate (v0.5.0+):** all 3 skills enforce a 5-test rubric on the
+first sentence before emitting the envelope: (1) standalone-readable as a
+complete thought, (2) specific (numbers/named tools/dated stakes — never vague),
+(3) curiosity-gap or pattern-interrupt (reader can't predict the payoff),
+(4) native voice (NOT LinkedIn-formal, NOT Gen-Z slang), (5) payoff lands
+within the platform's preview window (IG 200 chars / TikTok 80 chars /
+Threads 210 chars). Weak hooks are regenerated, never shipped to fit length
+targets.
 
 ## Why a separate plugin?
 
@@ -40,9 +49,15 @@ Threads, by contrast, **IS** in this plugin (Tier-1) because Threads is the prim
 
 ### `/instagram-gen`
 - Hashtags: **3-5 items HARDCAP** (Dec 2025 IG algorithm change penalizes 6+)
-- Caption: ≤2200 chars
-- Title (first-line hook): ≤125 chars
-- **NO link in caption** — IG canonical workflow puts link in bio or first comment
+- Caption: ≤2200 chars hard limit. **Default sweet spot: 100-300 chars** (~15-50 words)
+  per Socialinsider 9M+ posts study — captions <30 words drive HIGHEST engagement
+  because slides carry the value, caption is the conversational frame. Long-form
+  700-1500 chars is a deliberate exception (only when slides don't carry the full
+  insight). AVOID 300-700 char no-man's-land.
+- Title (first-line hook): ≤125 chars — preview cutoff before "more"; first
+  sentence MUST pass the Hook Quality Gate (5 tests, see above)
+- **NO link in caption** — IG canonical workflow puts link in first comment via
+  Publer (NOT bio — operator does NOT update bio per-post)
 - **Bahasa Indonesia authoring** (Indonesian audience target; EN tech terms OK as shorthand)
 - No `music_suggestion` field (photo carousel = no audio track)
 - **OPTIONAL `text_only_caption`** field (≤1000 chars, body URL allowed) — condensed
@@ -51,18 +66,30 @@ Threads, by contrast, **IS** in this plugin (Tier-1) because Threads is the prim
 
 ### `/tiktok-gen`
 - Hashtags: 5-8 items
-- Caption: ≤2200 chars; **first 150 chars CRITICAL** for search index
-- Title (first-line hook): ≤100 chars (shorter than IG)
-- **Link in caption is OK** (TikTok allows it; many creators do this)
+- Caption: ≤2200 chars hard limit. **Default sweet spot: 80-150 chars** (~12-25 words)
+  per TTS Vibes / Glow Social 2026 analytics — 50-100 char captions get +21%
+  likes vs longer captions. Front-load primary keyword in first 80-100 chars
+  (preview cutoff + search-index zone). Extend to 200-400 only for SEO-driven
+  educational posts.
+- Title field: **≤90 chars** (Publer hard cap for TikTok photo carousel, REQUIRED
+  not optional). MUST NOT echo caption first line — title is summary headline,
+  caption opens with a different hook
+- First sentence MUST pass the Hook Quality Gate (5 tests, see above)
+- **Link in caption is OK** (TikTok allows it; many creators do this — note
+  TikTok has no first-comment API support via Publer)
 - **Bahasa Indonesia authoring** (Indonesian audience target; EN tech terms OK as shorthand)
 - Primary search keyword can be EN tech term (search index is locale-aware)
 - No `music_suggestion` field — Publer auto-attaches trending music
 
 ### `/threads-gen`
 - Hashtags: **0-3 items HARDCAP** (Threads minimal hashtag culture; 4+ flagged as spam)
-- Caption: ≤500 chars (platform hard limit), **280-450 sweet spot**
-- Title (preview-cut hook): ≤140 chars (Threads "more" cutoff on feed)
-- **NO link in caption** — Threads de-prioritizes body URLs; link goes in first reply or bio
+- Caption: ≤500 chars (platform hard limit), **280-450 sweet spot** (Threads is
+  thought-leadership format — needs more dwell than IG/TikTok)
+- Title (preview-cut hook): ≤140 chars (Threads "more" cutoff on feed); first
+  sentence + setup MUST pass the Hook Quality Gate (payoff lands within first
+  210 chars / preview window)
+- **NO link in caption** — Threads de-prioritizes body URLs; link goes in first
+  reply via Publer
 - **Pro-but-conversational tone** — capital case, witty + sharp, NEVER lowercase Gen-Z slang
 - **Bahasa Indonesia by default** — caption + hook + engagement question all Indonesian. Schema field `language: 'id'|'en'|'mixed'`, **default `'id'`** (v0.3.0+; was `'mixed'` in v0.2.0). Caller may override to `'en'` for global thought-leadership posts or `'mixed'` for bilingual code-switch.
 - 6 hook formulas: contrarian truth / number reveal / hidden cost / personal stake / local context grounding / industry call-out
