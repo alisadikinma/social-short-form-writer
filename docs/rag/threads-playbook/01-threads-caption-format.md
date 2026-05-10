@@ -3,9 +3,10 @@
 ## Hard limits
 
 - **Hard cap:** 500 chars per post (Threads platform limit, May 2026)
-- **Sweet spot:** 280-450 chars
-- **Preview cut:** First ~140 chars show on feed before "more" — invest the strongest hook here
+- **Sweet spot:** 280-450 chars (Threads is thought-leadership format — needs more dwell than IG/TikTok)
+- **Preview cut:** First ~210 chars show on feed before "more" — Hook + 1-2 setup lines must work as standalone scroll-stopper here
 - **Title field:** First 100 chars of caption (used for queue display, NOT separate field)
+- **Hook Quality Gate:** First sentence MUST pass 5 tests (standalone-readable, specific, curiosity-gap, native voice, payoff within preview window) — see Hard Rule 10 in `threads-gen/SKILL.md`
 
 ## Structure (Pro-but-conversational tone)
 

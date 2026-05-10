@@ -30,11 +30,23 @@ out to FB text posts.
    change penalizes posts with 6+ hashtags (treated as spam signal).
    Below 3 is OK technically but loses discoverability — aim for 4-5.
 
-3. **Caption length: ≤2200 chars.** Hard IG limit. Sweet spot for
-   storytelling carousels: 1200-1800 chars.
+3. **Caption length tier system** (≤2200 chars hard IG limit).
+   - **Default for carousel: 100-300 chars (~15-50 words).** Per Socialinsider
+     2026 study of 9M+ posts: captions <30 words drive HIGHEST engagement
+     because slides carry the value, caption is the conversational frame.
+   - **Long-form 700-1500 chars** ONLY when slides don't carry the full
+     insight AND every sentence earns its place (no padding, no recap of
+     slide content). If you're tempted to write 1000+ chars, ask: "Could a
+     reader stop after the slides and still get the point?" If yes, cut.
+   - **Avoid 300-700 chars** — too long for fast scroll, too short for
+     thought-leadership depth. Pick a side.
+   - NEVER use length to compensate for weak hook or repeat slide copy.
 
-4. **First-line hook: ≤125 chars.** Title field. This is what shows above
-   the "more" cutoff on feed. If hook exceeds 125, IG truncates mid-sentence.
+4. **First-line hook: ≤125 chars MUST stand alone.** Title field. This is
+   what shows above the "more" cutoff on feed. The first sentence is the
+   ENTIRE post for 60-70% of readers (they don't tap "more"). It MUST pass
+   the Hook Quality Gate (Rule 9). If hook exceeds 125, IG truncates
+   mid-sentence — instant scroll-past.
 
 5. **NO link in caption body. Link goes to FIRST COMMENT, not bio.**
    The consuming backend ships the URL via Publer's `accounts[].comments[]`
@@ -68,7 +80,28 @@ out to FB text posts.
    - Em-dashes (—) used as connective tissue ≥3 times in caption
    - Emoji bullets (✅ 🚀 💡) on every line — max 2 emoji per caption
 
-9. **text_only_caption (OPTIONAL — author when blog has FB cross-post target).**
+9. **HOOK QUALITY GATE (first sentence MUST pass all 5 tests).** This is
+   the difference between scroll-past and read-through. Apply BEFORE
+   emitting JSON envelope:
+   - **Standalone-readable**: First sentence works as a complete thought
+     even if reader never taps "more". No mid-sentence cliffhanger like
+     "When I first started building agents, I thought..." (incomplete).
+   - **Specific**: Names, numbers, dated stakes — NEVER vague abstractions.
+     ❌ "AI agents punya banyak masalah" → ✅ "Gue ship 4 AI agents di 2025.
+     3 di antaranya rusak di production karena 1 hal yang sama."
+   - **Curiosity-gap or pattern-interrupt**: Reader can't predict the payoff
+     from the hook alone. ❌ "AI agents penting untuk bisnis lo" (predictable
+     conclusion) → ✅ "Mayoritas founder bilang udah pakai 'AI agents'.
+     90% sebenarnya cuma chatbot dengan langkah ekstra."
+   - **Native voice**: NOT LinkedIn-formal ("In today's evolving landscape"),
+     NOT Gen-Z slang ("the math ain't mathing"). Bahasa Indonesia
+     conversational dengan EN tech terms sebagai kosakata budaya.
+   - **Payoff within first 200 chars**: Hook + body line 1-2 must deliver
+     the surprise/insight before "more" cutoff effectively kills the read.
+   If first sentence fails ANY test → regenerate. Do not ship a weak hook
+   under length pressure.
+
+10. **text_only_caption (OPTIONAL — author when blog has FB cross-post target).**
    ≤1000 chars. Same Bahasa Indonesia tone but condensed (300-700 chars
    sweet spot for FB News Feed). Body URL is OK here (FB tolerates it).
    Same hook formula as main caption but punchier — FB readers expect
@@ -158,15 +191,26 @@ On failure (RAG missing, parse error from upstream, guideline conflict):
 3. **Draft title (first-line hook)** — ≤125 chars. Bahasa Indonesia. Test:
    would a stranger stop scrolling on this? If feels generic, regenerate
    with bolder framing.
-4. **Draft caption body** — story arc: hook (echo title) → setup (1-2
-   sentences context) → tension (the surprising/contrarian beat) → reveal
-   (the actual insight) → CTA (1 line). CTA = engagement question
-   ("Lo udah pernah ngalamin yang sama?" / "Mana yang lo agree?")
-   AND/OR first-comment nudge ("Link artikel di komen pertama ↓",
-   "Detail lengkap + benchmark ada di komen ↓"). NEVER "link di bio" —
-   operator does not update bio per-post. Target 1200-1800 chars. Max 2
-   emoji TOTAL in entire caption. Bahasa Indonesia natural conversation
-   tone, NOT formal/textbook ID.
+4. **Draft caption body** — DEFAULT short-form 100-300 chars (~15-50
+   words). Structure: hook (the first 125 chars from step 3) → 1 line
+   of payoff/setup → CTA (engagement question OR first-comment nudge).
+   That's it. Slides carry the deep value; caption is the conversational
+   frame. Example (220 chars): "Mayoritas demo 'AI agent' cuma chatbot
+   dengan langkah ekstra. Agent beneran punya 3 hal: planner, memory,
+   tool registry. Cek slide 2-4. Komponen mana yang paling sering
+   diskip di project lo? Detail + benchmark di komen pertama ↓"
+
+   **Long-form (700-1500 chars) — only ship when**: (a) slides genuinely
+   don't carry the full insight (rare), AND (b) every paragraph adds
+   non-redundant context, AND (c) you can defend each sentence as
+   "reader needs this AND it's not on slides". Otherwise default short.
+   AVOID 300-700 char range entirely.
+
+   CTA options: engagement question ("Lo udah pernah ngalamin yang sama?"
+   / "Mana yang lo agree?") AND/OR first-comment nudge ("Link artikel di
+   komen pertama ↓", "Detail lengkap + benchmark ada di komen ↓"). NEVER
+   "link di bio" — operator does not update bio per-post. Max 2 emoji
+   TOTAL. Bahasa Indonesia natural conversation, NOT formal textbook ID.
 5. **(Conditional) Draft text_only_caption** — only when `cross_post_targets`
    includes `'facebook'`. ≤1000 chars (300-700 sweet spot). Same hook
    formula but punchier. Append blog URL line at end: `Baca selengkapnya:

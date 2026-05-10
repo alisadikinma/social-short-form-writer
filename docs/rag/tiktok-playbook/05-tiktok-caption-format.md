@@ -1,6 +1,6 @@
 # 05 — TikTok Photo Mode Caption Format (2026)
 
-**Summary:** TikTok Photo Mode captions should be 150–300 characters for standard B2B content, or 500+ characters for SEO-focused educational posts. Front-load the primary keyword in the first 150 characters; captions are now a primary search-index signal on TikTok.
+**Summary:** TikTok Photo Mode captions default to 80-150 chars (~12-25 words) — 2026 engagement data shows 50-100 char captions get +21% likes vs longer captions. Front-load primary keyword in first 80-100 chars (preview cutoff + search-index zone). The first sentence MUST pass the Hook Quality Gate. Extend to 200-400 chars only for SEO-driven educational posts. AVOID 400+ chars (TikTok scroll is faster than IG).
 
 > **Authoring language: Bahasa Indonesia.** All caption output must be in Indonesian
 > (target audience: Indonesian Gen Z + founder/dev community). English *terms* OK
@@ -37,18 +37,19 @@ TikTok captions function differently from Instagram captions in two important wa
 
 ## Rules
 
-1. **Put the primary keyword in the first 150 characters.** TikTok's caption is truncated in the feed after approximately 150 characters (before a "...more" prompt). The first 150 characters are indexed with higher weight by TikTok search. For B2B tech: "AI automation", "LLM deployment", "vibe coding", "agentic AI" should appear here. Example first line: "The LLM deployment checklist we use before every production push — swipe to steal it."
+1. **Put the primary keyword in the first 80-100 characters AND pass the Hook Quality Gate.** TikTok preview cutoff is ~80-100 chars (more aggressive than IG's 125). The first sentence is the entire post for most viewers. It MUST pass these 5 tests: (a) standalone-readable, (b) specific (numbers/named tools/dated stakes), (c) curiosity-gap or pattern-interrupt, (d) native voice (not LinkedIn-formal, not Gen-Z slang), (e) primary keyword + curiosity payoff in first 80 chars. For B2B tech: "AI automation", "AI agents", "vibe coding" should appear in first sentence. Example (135 chars): "Stop bikin AI agents kayak masih 2024. 3 hal yang bikin agents lo rusak di production — fix-nya di slide 4-6."
 
-2. **Caption length by content type:**
-   - Standard B2B post: 150–300 characters (hook + hashtags, concise)
-   - SEO-focused educational post: 500–800 characters (keyword-rich description, frameworks, context)
-   - Avoid mid-range 300–500 chars: too long to read on mobile swipe, too short to index well for search
+2. **Caption length tier system** (2026 engagement data):
+   - **Default sweet spot: 80-150 chars (~12-25 words).** Per TTS Vibes / Glow Social analytics: captions 50-100 chars get +21% likes vs longer captions. THIS IS THE DEFAULT.
+   - **SEO-driven educational posts: 200-400 chars** ONLY when first-150 search-index zone needs additional keyword density AND value justifies dwell.
+   - **AVOID 400+ chars** — TikTok users scroll faster than IG; longer captions skipped before payoff lands.
+   - **NEVER repeat slide content** — TikTok users skip captions when slides already deliver the value.
 
-3. **Use 1–3 sentences maximum for standard posts.** TikTok users are in a faster scroll context than Instagram. The caption's job is to give one compelling reason to swipe through the slides, not to explain the full content. Example: "Most teams get this wrong on day 1. Swipe to see the 3-step fix."
+3. **Use 1-2 sentences maximum for standard posts.** TikTok users are in a faster scroll context than Instagram. The caption's job is to give one compelling reason to swipe through the slides. Example: "Mayoritas team salah di hari pertama. Slide 3-5 kasih lo 3-step fix."
 
-4. **Include save prompts in the caption for educational content.** "Save this", "You'll need this later", "Screenshot this checklist" — phrases that signal durable value boost TikTok's "save" metric (which the algorithm treats similarly to a completion event). This is more important for Photo Mode than for video because Photo Mode posts compete for saves-as-bookmark behavior.
+4. **Include save prompts in the caption for educational content.** "Save buat sprint planning", "Lo bakal butuh ini bulan depan", "Screenshot checklist-nya" — phrases that signal durable value boost TikTok's "save" metric (algorithm treats similarly to a completion event). More important for Photo Mode than video.
 
-5. **Avoid links in captions.** TikTok suppresses reach on posts that include external URLs in captions (same pattern as all major platforms in 2026). Direct traffic via bio link ("link in bio") or in-video/on-slide text.
+5. **Link in caption: ALLOWED on TikTok** (unique to TikTok — IG/Threads forbid). TikTok auto-detects body URLs and makes them tappable. If blog URL provided, append at end: `Baca: <shortened-url>`. Use shortened URL (e.g., `alisadikinma.com/r/abc1234`) — 7-char codes save ~70-95 chars vs full SEO slug.
 
 ---
 

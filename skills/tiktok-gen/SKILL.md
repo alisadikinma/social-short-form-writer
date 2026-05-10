@@ -25,8 +25,18 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
    primary search-index signal — fewer than 5 loses discoverability.
    More than 8 dilutes the signal (treated as spam).
 
-3. **Caption length: ≤2200 chars.** TikTok hard limit. Sweet spot:
-   200-500 chars for photo-mode, 80-150 for video.
+3. **Caption length tier system** (TikTok hard limit ≤2200 chars).
+   - **Default sweet spot: 80-150 chars** (~12-25 words). Per 2026 TikTok
+     engagement data: captions 50-100 chars get +21% likes vs longer
+     captions (TTS Vibes / Glow Social analytics). Front-load primary
+     keyword in first 80-100 chars (preview cutoff zone).
+   - **SEO-driven educational posts: 200-400 chars** ONLY when first-150
+     search-index zone needs additional keyword density AND the value
+     justifies longer dwell.
+   - **AVOID 400+ chars** — TikTok users scroll faster than IG; longer
+     captions get skipped before payoff lands.
+   - **NEVER repeat slide content** — TikTok users skip captions when
+     slides already deliver the value. Caption is the conversational frame.
 
 4. **Title field: ≤90 chars.** Publer hard cap for TikTok photo carousel
    (REQUIRED field, not optional). Title is the carousel COVER header
@@ -71,6 +81,24 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
    - "Tahukah Anda?" (engagement-bait opener)
    - Emoji bullets used as visual structure on every line
    - Em-dashes (—) used as connective tissue ≥3 times in caption
+
+10. **HOOK QUALITY GATE (first sentence MUST pass all 5 tests).** TikTok
+    preview cutoff is ~80-100 chars — first sentence is the entire post
+    for most viewers. Apply BEFORE emitting JSON envelope:
+    - **Standalone-readable**: First sentence works as a complete thought
+      even if reader never taps "more". No mid-sentence cliffhangers.
+    - **Specific**: Numbers, named tools, dated stakes — NEVER vague.
+      ❌ "AI agents lo punya masalah" → ✅ "Gue ship 4 AI agents 2025.
+      3 rusak di production karena 1 hal yang sama."
+    - **Curiosity-gap or pattern-interrupt**: Reader can't predict the
+      payoff from the hook alone. ❌ "AI agents penting buat startup"
+      → ✅ "Stop bikin AI agents kayak masih 2024."
+    - **Native voice**: NOT LinkedIn-formal, NOT Gen-Z slang. Bahasa
+      Indonesia conversational dengan EN tech terms sebagai shorthand.
+    - **Primary keyword in first 80 chars**: TikTok search index zone.
+      Cover this AND the curiosity payoff in the first sentence.
+    If first sentence fails ANY test → regenerate. Do not ship a weak
+    hook to fit length targets.
 
 ## Input shape
 
@@ -148,10 +176,19 @@ On failure:
 2. **Identify hook angle** — pick ONE of 5 hook formulas. Test against the
    blog's strongest claim. Reference `refs-tiktok.md` Hook Patterns.
 3. **Draft title (first-line hook)** — ≤100 chars. Bahasa Indonesia. Punchier than IG.
-4. **Draft caption body** — front-load primary keyword in first 150 chars.
-   Photo-mode: 200-500 chars. Story arc compressed: hook → reveal → CTA.
-   Append blog URL if provided (`Baca selengkapnya: <url>`). Max 2 emoji TOTAL.
-   Bahasa Indonesia conversational, NOT formal textbook ID.
+4. **Draft caption body** — DEFAULT 80-150 chars. Front-load primary
+   keyword in first 80-100 chars (preview cutoff + search-index zone).
+   Structure: hook (first sentence, must pass Hook Quality Gate Rule 10)
+   → 1 line payoff/CTA → optional blog URL. That's it. Slides carry the
+   value; caption is the conversational frame.
+   Example (135 chars): "Stop bikin AI agents kayak masih 2024. 3 hal yang
+   bikin agents lo rusak di production — fix-nya di slide 4-6. Baca:
+   alisadikinma.com/r/abc1234"
+
+   **Long-form (200-400 chars) — only ship when**: SEO needs additional
+   keyword density beyond first 150 chars AND value justifies dwell.
+   Append blog URL if provided. Max 2 emoji TOTAL. Bahasa Indonesia
+   conversational, NOT formal textbook ID.
 5. **Pick hashtags** — 5-8 items. Mix:
    - 1-2 broad tags (`#aibuilders` — avoid generic `#fyp` unless algo data
      justifies; prefer pillar-specific)

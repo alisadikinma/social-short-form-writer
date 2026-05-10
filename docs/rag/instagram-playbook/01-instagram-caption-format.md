@@ -1,6 +1,6 @@
 # 01 — Instagram Caption Format (B2B Carousel, 2026)
 
-**Summary:** Instagram captions for B2B carousels must hook in the first 125 characters, use line breaks for readability, and end with a specific (not generic) CTA. Sweet spot is 150–400 words for educational content.
+**Summary:** Instagram captions for B2B carousels must hook in the first 125 characters and pass the Hook Quality Gate. Default sweet spot is 100-300 chars (~15-50 words) — Socialinsider 9M+ posts study shows captions <30 words drive HIGHEST engagement. Long-form 700-1500 chars is a deliberate exception, only when slides don't carry the full insight. AVOID 300-700 chars (no-man's-land between fast-scroll short and depth-driven long).
 
 > **Authoring language: Bahasa Indonesia.** All caption output must be in Indonesian
 > (target audience: Indonesian Gen Z + founder/dev community). English *terms* OK
@@ -16,26 +16,31 @@
 
 | Source | URL | Fetched | Quality Tier |
 |---|---|---|---|
+| Socialinsider — IG Caption Length Study (9M+ posts) | https://www.socialinsider.io/blog/instagram-caption-length/ | 2026-05-10 | Industry analytics |
 | TrueFuture Media — Instagram Reach 2026 | https://www.truefuturemedia.com/articles/instagram-reach-2026-algorithm-reels-carousels-caption-seo | 2026-05-07 | Marketing analytics |
 | Metricool — Instagram Carousels Best Practices 2026 | https://metricool.com/instagram-carousels/ | 2026-05-07 | Marketing analytics |
 | bestcontent.ai — Instagram Carousel Complete Guide 2026 | https://bestcontent.ai/blog/article/instagram-carousel | 2026-05-07 | Marketing blog |
 | Glow Social — Social Media Caption Length Guide 2026 | https://glowsocial.com/blog/social-media-caption-length | 2026-05-07 | Marketing blog |
-| Sup Growth — Instagram Caption Spacing 2026 | https://supgrowth.com/2026/04/08/instagram-caption-spacing/ | 2026-05-07 | Marketing blog |
-| carouselli.com — Instagram Carousel Engagement Stats 2026 | https://carouselli.com/blog/instagram-carousel-engagement | 2026-05-07 | Marketing analytics |
+| River Editor — IG Caption Templates Triple Engagement 2026 | https://rivereditor.com/blogs/instagram-caption-templates-triple-engagement-2026 | 2026-05-10 | Marketing analytics |
+| Buffer — Instagram Algorithm 2026 | https://buffer.com/resources/instagram-algorithms/ | 2026-05-10 | Industry analytics |
 
 ---
 
 ## Rules
 
-1. **Hook within the first 125 characters.** Instagram truncates captions at approximately 125 characters before showing "...more". Everything before the truncation point is the preview — this is your primary real estate. Open with a provocative claim, a precise number, or a question that cannot be answered without tapping "more". Example (ID): "95% AI engineer skip langkah deployment ini — bikin kita downtime 3 jam."
+1. **Hook within the first 125 characters AND pass the Hook Quality Gate.** Instagram truncates captions at ~125 chars before "...more". For 60-70% of readers, the first 125 chars ARE the entire post — they never tap "more". The first sentence MUST pass these 5 tests: (a) standalone-readable as a complete thought, (b) specific (numbers/named tools/dated stakes — never vague), (c) curiosity-gap or pattern-interrupt (reader can't predict the payoff), (d) native voice (not LinkedIn-formal, not Gen-Z slang), (e) payoff lands within first 200 chars. Example (ID, 95 chars): "Mayoritas demo 'AI agent' cuma chatbot dengan langkah ekstra. Cek 3 komponen yang missing."
 
 2. **Use hard line breaks between every sentence or idea.** Walls of text get scrolled past on mobile. Single-sentence lines with blank lines between them are proven to increase read-through rate. Instagram supports line breaks natively in the app but some third-party tools collapse them — verify rendering before publishing.
 
-3. **Target 150–400 characters for B2B educational carousels.** Sources conflict slightly here: general accounts see engagement peak around 138–150 chars, but B2B educational content benefits from more context (up to 400 chars of caption). Avoid crossing 500 chars unless the extra text is genuinely load-bearing information the carousel does not cover. The rule of thumb: if the caption repeats what is on the slides, cut it.
+3. **Caption length tier system.** Per Socialinsider 2026 9M+ post study + 2026 IG algorithm:
+   - **Default short-form: 100-300 chars (~15-50 words).** Captions <30 words drive HIGHEST engagement. Slides carry the value, caption is the conversational frame. THIS IS THE DEFAULT — start here.
+   - **Long-form 700-1500 chars** ONLY when slides genuinely don't carry the full insight AND every sentence earns its place. Defend each sentence as "reader needs this AND it's not on slides".
+   - **AVOID 300-700 chars entirely** — too long for fast scroll, too short for thought-leadership depth. Pick a side.
+   - NEVER use length to compensate for weak hook or repeat slide copy.
 
 4. **Place keywords in the first sentence.** Instagram's caption is now indexed for in-app search (confirmed by multiple sources, 2026). Place your primary keyword (e.g., "AI automation", "vibe coding", "LLM deployment") in the first line. This improves Explore and Search discoverability beyond hashtag reach.
 
-5. **End with a specific behavior CTA, not a generic one.** Generic CTAs ("follow for more", "like if you agree") perform poorly and can trigger engagement-bait penalties. Specific CTAs tied to the content perform better: "Save this for your next sprint planning session", "Comment your team's biggest bottleneck — I'll reply with the framework we used", "Share this with your lead engineer."
+5. **End with a specific behavior CTA, not a generic one.** Generic CTAs ("follow for more", "like if you agree") perform poorly and can trigger engagement-bait penalties. Specific CTAs tied to the content perform better: "Komponen mana yang paling sering diskip di stack lo?", "Save this buat next sprint planning", "Detail + benchmark di komen pertama ↓".
 
 ---
 

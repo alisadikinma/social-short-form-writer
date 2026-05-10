@@ -78,6 +78,29 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
    2 lines deliver the punch. Reader is baited → must be paid off within
    100 chars.
 
+10. **HOOK QUALITY GATE (first sentence MUST pass all 5 tests).** Threads
+    preview cutoff is ~210 chars — first sentence + setup must work as
+    standalone scroll-stopper before "more" cutoff. Apply BEFORE emitting
+    JSON envelope:
+    - **Standalone-readable**: First sentence works as a complete thought
+      even if reader never taps "more". No mid-sentence cliffhangers like
+      "When you first start building agents..." (incomplete).
+    - **Specific**: Numbers, named tools, dated stakes — NEVER vague.
+      ❌ "AI agents punya banyak masalah" → ✅ "Mayoritas demo 'AI agent'
+      cuma chatbot dengan langkah ekstra."
+    - **Curiosity-gap, contrarian, or pattern-interrupt**: Reader can't
+      predict the payoff from the hook alone. The hook MUST violate at
+      least one assumption the reader walks in with.
+    - **Native voice**: Pro-but-conversational. NOT LinkedIn-formal
+      ("In today's evolving AI landscape"), NOT lowercase Gen-Z slang
+      ("the math ain't mathing"). Capital case, Bahasa Indonesia
+      conversational dengan EN tech terms sebagai shorthand.
+    - **Payoff within first 210 chars**: Hook + 1-2 setup lines must
+      deliver the surprise/insight before "more" cutoff. If reader stops
+      at preview, they should still get the take.
+    If first sentence fails ANY test → regenerate. Do not ship a weak
+    hook to fit length targets.
+
 ## Input shape
 
 The skill accepts ONE positional arg: a JSON string with this structure:
