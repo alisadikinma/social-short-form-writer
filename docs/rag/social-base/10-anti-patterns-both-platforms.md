@@ -25,7 +25,17 @@
 Instagram actively detects and suppresses content with TikTok's CapCut/TikTok watermark. This is a documented, intentional platform behavior confirmed by multiple 2026 sources. **Do not cross-post the same rendered slide image if it contains the TikTok logo or TikTok-native overlays.** Use the source asset (the original 1080×1350 PNG from the carousel pipeline) on Instagram, not a TikTok screenshot/export.
 
 ### 2. External URLs in Captions — REACH SUPPRESSION
-Both Instagram and TikTok suppress reach on posts containing external URLs in the caption text. This is consistent across platforms in 2026. Use "link in bio" as text, not a live URL. Do not include `https://` in captions on either platform.
+Both Instagram and TikTok suppress reach on posts containing external URLs in the caption text. This is consistent across platforms in 2026.
+
+**This codebase ships URLs via Publer's `accounts[].comments[]` field as the FIRST COMMENT** (Instagram + Threads supported; TikTok does NOT have first-comment API and is the exception — TikTok URL goes in caption body since there's no alternative).
+
+DO NOT reference "link in bio" — operator does NOT update bio per-post. Use:
+- `"Link artikel di komen pertama ↓"` (Instagram, Threads)
+- `"Detail lengkap di komen ↓"` (Instagram, Threads)
+- Bare engagement question with no link reference (preferred when question is strong)
+- TikTok-only exception: full URL allowed in caption body (no first-comment API)
+
+Do not include `https://` in IG/Threads captions (schema rejects).
 
 ### 3. Engagement Bait Language — INSTAGRAM PENALTY
 Instagram penalizes posts that contain explicit engagement-bait phrases:
@@ -79,7 +89,7 @@ When reposting the same carousel asset from LinkedIn to Instagram to TikTok:
 | Caption tone | Professional, formal | Educational, approachable | Direct, punchy, compressed |
 | Hashtags | 3–5 niche | 3–5 (hard limit) | 3–5 (pyramid method) |
 | CTA | "Share with your team" | "Save this" | "Save this / follow for more like this" |
-| External link | Mention "link in comments" | "Link in bio" | "Link in bio" |
+| External link | "link in comments" | "link di komen pertama ↓" | URL in caption body (no first-comment API) |
 | Music | None | None | Background music — add in TikTok app |
 | Hook line | Same or slightly expanded | Same (125-char truncation) | Compressed to <8 words |
 

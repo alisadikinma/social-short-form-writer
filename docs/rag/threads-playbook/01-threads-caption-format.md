@@ -52,8 +52,8 @@ remains available as opt-in but is no longer default.
 ## Link strategy
 
 - **NO link in caption body** — same penalty as IG, Threads algorithm de-prioritizes posts with body URLs
-- **Link in first reply** (manual operator action OR Publer auto-feature for Threads if available)
-- **Link in bio** as fallback
+- **Link goes in FIRST REPLY** via Publer's `accounts[].comments[]` field (this codebase's actual flow)
+- **DO NOT reference "link di bio"** — operator does NOT update bio per-post. Use `"Link di reply pertama ↓"` or `"Detail lengkap di komen ↓"` or skip link nudge entirely
 - Schema: NO `link_url` field
 
 ## Examples
