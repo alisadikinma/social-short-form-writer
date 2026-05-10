@@ -5,6 +5,24 @@ All notable changes to `social-short-form-writer` will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] — 2026-05-10
+
+### Changed
+
+- **`/instagram-gen` Hard Rule #5 + Step 4 CTA + `/threads-gen` Hard Rule #6**:
+  caption MUST NOT reference "link di bio". The consuming backend ships URLs
+  via Publer's `accounts[].comments[]` field as the FIRST COMMENT (IG) /
+  FIRST REPLY (Threads). Operator does NOT update bio per-post.
+  - Old (WRONG) CTA pattern: `"Detail + artikel lengkap ada di bio."`
+  - New CTA options:
+    - Engagement question: `"Lo udah pernah ngalamin yang sama?"`
+    - First-comment nudge: `"Link artikel di komen pertama ↓"`
+    - Skip link nudge entirely if engagement question is strong enough
+  - Both SKILL.md files explicitly forbid: "Link di bio", "Cek bio",
+    "Detail di bio", "ada di bio", "Klik link di profile".
+- TikTok unchanged — TikTok has NO first-comment API support via Publer, so
+  link in caption body is the only path (already canonical in `/tiktok-gen`).
+
 ## [0.3.0] — 2026-05-10
 
 ### Changed (BREAKING — output language flipped EN → ID)

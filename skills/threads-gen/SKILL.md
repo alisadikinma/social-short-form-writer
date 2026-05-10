@@ -41,9 +41,15 @@ JSON envelope to stdout. Pure content generation — does NOT call backend API.
    - 3 hashtags = max
    - 4+ = auto-fail (algorithm spam classifier)
 
-6. **NO link in caption body.** Threads de-prioritizes body URLs same as
-   IG. Link goes in first reply (operator action) or bio. Schema rejects
-   any `https?://` match in caption.
+6. **NO link in caption body. Link goes to FIRST REPLY, not bio.**
+   Threads de-prioritizes body URLs same as IG. Operator does NOT update
+   bio per-post — backend ships URL via Publer's `accounts[].comments[]`
+   field which posts as the first reply on the parent thread.
+   Therefore:
+   - NEVER write "Link di bio", "Cek bio", "Detail di bio", "ada di bio".
+   - DO write "Link di reply pertama ↓", "Detail lengkap di komen ↓",
+     or skip the link nudge entirely and end on an engagement question.
+   - Schema rejects any `https?://` match in caption (defense in depth).
 
 7. **Hook formula adherence.** First line must be ONE of 6 patterns
    (in Indonesian):

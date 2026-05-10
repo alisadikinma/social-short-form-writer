@@ -1,6 +1,6 @@
 ---
 name: instagram-gen
-description: Convert a blog post (with optional pre-rendered carousel slides JSON) into a native Instagram caption + 3-5 hashtags + suggested posting time slot. 4:5 photo carousel format. Bahasa Indonesia authoring (Indonesian audience target). Hard 5-hashtag cap (Dec 2025 algorithm change). NO link in caption — IG link belongs in bio or first comment. Optional text_only_caption field for Facebook text-post reuse. Emits ONE JSON envelope to stdout matching `InstagramOutputEnvelopeSchema`.
+description: Convert a blog post (with optional pre-rendered carousel slides JSON) into a native Instagram caption + 3-5 hashtags + suggested posting time slot. 4:5 photo carousel format. Bahasa Indonesia authoring (Indonesian audience target). Hard 5-hashtag cap (Dec 2025 algorithm change). NO link in caption body — link goes to FIRST COMMENT via Publer (NOT bio — operator does not update bio per-post). Optional text_only_caption field for Facebook text-post reuse. Emits ONE JSON envelope to stdout matching `InstagramOutputEnvelopeSchema`.
 ---
 
 # /instagram-gen — Instagram caption authoring skill
@@ -36,9 +36,18 @@ out to FB text posts.
 4. **First-line hook: ≤125 chars.** Title field. This is what shows above
    the "more" cutoff on feed. If hook exceeds 125, IG truncates mid-sentence.
 
-5. **NO link in caption.** IG canonical workflow puts link in bio or first
-   comment. Body URLs hurt reach + look amateur. The consuming backend can
-   bypass this for FB carousel reuse, but plugin output stays canonical.
+5. **NO link in caption body. Link goes to FIRST COMMENT, not bio.**
+   The consuming backend ships the URL via Publer's `accounts[].comments[]`
+   field after publish — there is no "link in bio" workflow on this account.
+   Therefore:
+   - NEVER write "Link di bio", "Cek bio", "Detail di bio", "ada di bio",
+     "Klik link di profile" — operator does NOT update bio per-post.
+   - DO write "Link di komen pertama ↓", "Detail lengkap di komen ↓",
+     "Cek komen pertama buat artikel utuh", or skip the link nudge entirely
+     and end on an engagement question.
+   - Body URLs still forbidden (IG truncates / shows as plain text + reach
+     penalty). The consuming backend bypasses this for the optional
+     text_only_caption (FB reuse) only.
 
 6. **NO music_suggestion field.** IG photo carousel = no audio track.
    That's a TikTok-only field and Publer auto-handles TikTok music anyway.
@@ -151,9 +160,13 @@ On failure (RAG missing, parse error from upstream, guideline conflict):
    with bolder framing.
 4. **Draft caption body** — story arc: hook (echo title) → setup (1-2
    sentences context) → tension (the surprising/contrarian beat) → reveal
-   (the actual insight) → CTA (1 line — comment prompt or bio-link nudge).
-   Target 1200-1800 chars. Max 2 emoji TOTAL in entire caption. Bahasa
-   Indonesia natural conversation tone, NOT formal/textbook ID.
+   (the actual insight) → CTA (1 line). CTA = engagement question
+   ("Lo udah pernah ngalamin yang sama?" / "Mana yang lo agree?")
+   AND/OR first-comment nudge ("Link artikel di komen pertama ↓",
+   "Detail lengkap + benchmark ada di komen ↓"). NEVER "link di bio" —
+   operator does not update bio per-post. Target 1200-1800 chars. Max 2
+   emoji TOTAL in entire caption. Bahasa Indonesia natural conversation
+   tone, NOT formal/textbook ID.
 5. **(Conditional) Draft text_only_caption** — only when `cross_post_targets`
    includes `'facebook'`. ≤1000 chars (300-700 sweet spot). Same hook
    formula but punchier. Append blog URL line at end: `Baca selengkapnya:
