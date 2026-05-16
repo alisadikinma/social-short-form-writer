@@ -6,6 +6,18 @@ This file provides guidance to Claude Code when working in this plugin repo.
 captures architectural invariants, design decisions, and common pitfalls that
 won't show up in the user-facing docs.
 
+## 🧠 Vault Context Link
+
+Skill library — dipakai cross-project (Portfolio_v2 dispatcher, SPARKFLUENCE).
+
+Pre-read kalau perlu konteks:
+- `30-Knowledge/content-strategy-shared.md` — short-form virality, Gen Z patterns
+- `20-Projects/SPARKFLUENCE/README.md` — kalau modify Gen Z tone defaults
+- `20-Projects/claude-plugin/README.md` — skill ecosystem overview
+- `10-Identity/voice-tone.md` — Bahasa Indonesia voice
+
+JANGAN hardcode project-specific values. Pakai `{{placeholder}}` syntax.
+
 ## Project Overview
 
 Claude Code plugin housing 3 sister skills for short-form social caption authoring:
